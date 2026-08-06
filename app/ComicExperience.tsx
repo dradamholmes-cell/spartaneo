@@ -1,95 +1,19 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
+import { ComicReader } from "./ComicReader";
 
-const PAGE_COUNT = 24;
 const LULU_URL =
   "https://www.lulu.com/shop/adam-holmes/the-last-party-of-1999/paperback/product-dy4wmeq.html";
 
-function pageImage(page: number) {
-  return `/comic/issue-1/page-${String(page).padStart(2, "0")}.jpg`;
-}
-
 export function ComicExperience() {
   const [readerOpen, setReaderOpen] = useState(false);
-  const [page, setPage] = useState(1);
-  const [spread, setSpread] = useState(false);
-  const [zoom, setZoom] = useState(1);
-  const touchStart = useRef<number | null>(null);
-
-  const step = spread ? 2 : 1;
-  const lastStartPage = spread ? PAGE_COUNT - 1 : PAGE_COUNT;
 
   const openReader = useCallback(() => {
-    const saved = Number(window.localStorage.getItem("last-party-page"));
-    setPage(saved >= 1 && saved <= PAGE_COUNT ? saved : 1);
     setReaderOpen(true);
   }, []);
 
   const closeReader = useCallback(() => setReaderOpen(false), []);
-
-  const nextPage = useCallback(() => {
-    setPage((current) => Math.min(lastStartPage, current + step));
-  }, [lastStartPage, step]);
-
-  const previousPage = useCallback(() => {
-    setPage((current) => Math.max(1, current - step));
-  }, [step]);
-
-  useEffect(() => {
-    if (!readerOpen) return;
-    const oldOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "ArrowRight" || event.key === "PageDown") nextPage();
-      if (event.key === "ArrowLeft" || event.key === "PageUp") previousPage();
-      if (event.key === "Escape") closeReader();
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.body.style.overflow = oldOverflow;
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [closeReader, nextPage, previousPage, readerOpen]);
-
-  useEffect(() => {
-    if (readerOpen) window.localStorage.setItem("last-party-page", String(page));
-  }, [page, readerOpen]);
-
-  useEffect(() => {
-    if (!readerOpen) return;
-    [page + step, page + step + 1]
-      .filter((candidate) => candidate <= PAGE_COUNT)
-      .forEach((candidate) => {
-        const image = new Image();
-        image.src = pageImage(candidate);
-      });
-  }, [page, readerOpen, step]);
-
-  const toggleSpread = () => {
-    setSpread((current) => {
-      const next = !current;
-      if (next && page % 2 === 0) setPage(Math.max(1, page - 1));
-      return next;
-    });
-    setZoom(1);
-  };
-
-  const enterFullscreen = async () => {
-    if (!document.fullscreenElement) {
-      await document.documentElement.requestFullscreen?.();
-    } else {
-      await document.exitFullscreen?.();
-    }
-  };
-
-  const onTouchEnd = (event: React.TouchEvent) => {
-    if (touchStart.current === null) return;
-    const distance = event.changedTouches[0].clientX - touchStart.current;
-    if (distance < -55) nextPage();
-    if (distance > 55) previousPage();
-    touchStart.current = null;
-  };
 
   return (
     <main>
@@ -120,7 +44,7 @@ export function ComicExperience() {
           <div className="hero-actions">
             <button className="primary-action" onClick={openReader}>
               <span className="play-icon" aria-hidden="true">▶</span>
-              Read issue #1
+              Open deluxe reader
             </button>
             <a className="secondary-action" href={LULU_URL} target="_blank" rel="noreferrer">
               Get the print edition <span>↗</span>
@@ -221,58 +145,7 @@ export function ComicExperience() {
         <p>© 2026 OGB Originals. All rights reserved.</p>
       </footer>
 
-      {readerOpen && (
-        <section className="reader" role="dialog" aria-modal="true" aria-label="Comic book reader">
-          <header className="reader-header">
-            <div className="reader-title">
-              <span className="reader-ogb">OGB</span>
-              <div><strong>The Last Party of 1999</strong><span>Issue #1 · The Night We Don&apos;t Talk About</span></div>
-            </div>
-            <div className="reader-header-actions">
-              <a href={LULU_URL} target="_blank" rel="noreferrer">Buy print ↗</a>
-              <button onClick={closeReader} aria-label="Close comic reader">×</button>
-            </div>
-          </header>
-
-          <div
-            className={`reader-stage ${spread ? "spread" : "single"}`}
-            onTouchStart={(event) => { touchStart.current = event.touches[0].clientX; }}
-            onTouchEnd={onTouchEnd}
-          >
-            <button className="reader-arrow previous" onClick={previousPage} disabled={page === 1} aria-label="Previous page">‹</button>
-            <div className="page-viewport">
-              <div className="page-pair" style={{ transform: `scale(${zoom})` }}>
-                <img src={pageImage(page)} alt={`Comic page ${page}`} />
-                {spread && page + 1 <= PAGE_COUNT && <img src={pageImage(page + 1)} alt={`Comic page ${page + 1}`} />}
-              </div>
-            </div>
-            <button className="reader-arrow next" onClick={nextPage} disabled={page >= lastStartPage} aria-label="Next page">›</button>
-          </div>
-
-          <footer className="reader-controls">
-            <div className="page-status">
-              <strong>{spread && page + 1 <= PAGE_COUNT ? `${page}–${page + 1}` : page}</strong>
-              <span>of {PAGE_COUNT}</span>
-            </div>
-            <input
-              className="page-slider"
-              type="range"
-              min="1"
-              max={lastStartPage}
-              value={page}
-              aria-label="Jump to page"
-              onChange={(event) => setPage(Number(event.target.value))}
-            />
-            <div className="reader-tools">
-              <button onClick={() => setZoom((value) => Math.max(0.8, Number((value - 0.2).toFixed(1))))} aria-label="Zoom out">−</button>
-              <span>{Math.round(zoom * 100)}%</span>
-              <button onClick={() => setZoom((value) => Math.min(1.8, Number((value + 0.2).toFixed(1))))} aria-label="Zoom in">+</button>
-              <button className={spread ? "active" : ""} onClick={toggleSpread} aria-label="Toggle two-page view">▣</button>
-              <button onClick={enterFullscreen} aria-label="Toggle fullscreen">⛶</button>
-            </div>
-          </footer>
-        </section>
-      )}
+      {readerOpen && <ComicReader onClose={closeReader} />}
     </main>
   );
 }
