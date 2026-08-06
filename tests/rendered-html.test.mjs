@@ -28,6 +28,8 @@ test("server-renders the OGB comic storefront", async () => {
   assert.match(html, /The Place Where Windows Used to Be/i);
   assert.match(html, /product-dy4wmeq\.html/i);
   assert.match(html, /og:image[^>]+comics\.spartaneo\.com\/og\.png/i);
+  assert.match(html, /manifest\.webmanifest/i);
+  assert.match(html, /apple-mobile-web-app-capable/i);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
 });
 
@@ -50,10 +52,13 @@ test("ships the complete deluxe reader and print-quality assets", async () => {
   assert.match(readerSource, /last-party-page/);
   assert.match(readerSource, /ArrowRight/);
   assert.match(readerSource, /requestFullscreen/);
+  assert.match(readerSource, /reader-immersive/);
+  assert.match(readerSource, /visualViewport/);
   assert.match(readerSource, /"book" \| "single" \| "spread" \| "scroll"/);
   assert.match(readerSource, /PageFlip/);
   assert.match(readerSource, /HQ · 300 DPI/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
   await access(new URL("../public/og.png", import.meta.url));
   await access(new URL("../public/favicon.png", import.meta.url));
+  await access(new URL("../public/manifest.webmanifest", import.meta.url));
 });

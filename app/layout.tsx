@@ -1,6 +1,13 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#050606",
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   const requestHeaders = await headers();
@@ -14,6 +21,13 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: base,
     title,
     description,
+    manifest: "/manifest.webmanifest",
+    appleWebApp: {
+      capable: true,
+      title: "Last Party 1999",
+      statusBarStyle: "black-translucent",
+    },
+    other: { "mobile-web-app-capable": "yes" },
     icons: { icon: "/favicon.png", shortcut: "/favicon.png" },
     openGraph: {
       title,
@@ -29,6 +43,10 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
+      <head>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-touch-fullscreen" content="yes" />
+      </head>
       <body>{children}</body>
     </html>
   );

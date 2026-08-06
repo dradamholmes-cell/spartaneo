@@ -138,9 +138,9 @@ function BookView({ page, controllerRef, onPageChange, onOrientationChange }: Bo
         width: 656,
         height: 1000,
         size: "stretch",
-        minWidth: 270,
+        minWidth: 158,
         maxWidth: 720,
-        minHeight: 412,
+        minHeight: 240,
         maxHeight: 1098,
         drawShadow: true,
         flippingTime: 820,
@@ -208,6 +208,7 @@ export function ComicReader({ onClose }: ComicReaderProps) {
   const [readingLight, setReadingLight] = useState(false);
   const [soundOn, setSoundOn] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
+  const [immersive, setImmersive] = useState(false);
 
   useEffect(() => {
     if (page >= 1) window.localStorage.setItem("last-party-page", String(page));
@@ -289,21 +290,72 @@ export function ComicReader({ onClose }: ComicReaderProps) {
     goToPage(page - 1);
   }, [goToPage, mode, page, playPageTurn]);
 
-  const toggleFullscreen = useCallback(async () => {
-    if (!document.fullscreenElement) await readerRef.current?.requestFullscreen?.();
-    else await document.exitFullscreen?.();
+  const leaveFullscreen = useCallback(async () => {
+    setImmersive(false);
+    const webkitDocument = document as Document & {
+      webkitFullscreenElement?: Element | null;
+      webkitExitFullscreen?: () => Promise<void> | void;
+    };
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen?.();
+      else if (webkitDocument.webkitFullscreenElement) await webkitDocument.webkitExitFullscreen?.();
+    } catch {
+      // The CSS immersive layer still exits even when the browser rejects its native API.
+    }
   }, []);
+
+  const toggleFullscreen = useCallback(async () => {
+    if (immersive) {
+      await leaveFullscreen();
+      return;
+    }
+
+    setThumbnailsOpen(false);
+    setImmersive(true);
+    const element = readerRef.current as (HTMLElement & {
+      webkitRequestFullscreen?: () => Promise<void> | void;
+    }) | null;
+    try {
+      if (element?.requestFullscreen) await element.requestFullscreen({ navigationUI: "hide" });
+      else await element?.webkitRequestFullscreen?.();
+    } catch {
+      // iPhone browsers do not expose element fullscreen; immersive CSS is the fallback.
+    }
+  }, [immersive, leaveFullscreen]);
 
   useEffect(() => {
     const oldOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const onFullscreenChange = () => setFullscreen(Boolean(document.fullscreenElement));
+    const webkitDocument = document as Document & { webkitFullscreenElement?: Element | null };
+    const onFullscreenChange = () => setFullscreen(Boolean(document.fullscreenElement ?? webkitDocument.webkitFullscreenElement));
     document.addEventListener("fullscreenchange", onFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", onFullscreenChange);
     return () => {
       document.body.style.overflow = oldOverflow;
       document.removeEventListener("fullscreenchange", onFullscreenChange);
+      document.removeEventListener("webkitfullscreenchange", onFullscreenChange);
     };
   }, []);
+
+  useEffect(() => {
+    const syncMobileViewport = () => {
+      const height = window.visualViewport?.height ?? window.innerHeight;
+      readerRef.current?.style.setProperty("--reader-viewport-height", `${Math.round(height)}px`);
+    };
+    syncMobileViewport();
+    window.addEventListener("resize", syncMobileViewport);
+    window.visualViewport?.addEventListener("resize", syncMobileViewport);
+    window.visualViewport?.addEventListener("scroll", syncMobileViewport);
+    return () => {
+      window.removeEventListener("resize", syncMobileViewport);
+      window.visualViewport?.removeEventListener("resize", syncMobileViewport);
+      window.visualViewport?.removeEventListener("scroll", syncMobileViewport);
+    };
+  }, []);
+
+  useEffect(() => {
+    requestAnimationFrame(() => requestAnimationFrame(() => window.dispatchEvent(new Event("resize"))));
+  }, [immersive]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -317,11 +369,14 @@ export function ComicReader({ onClose }: ComicReaderProps) {
       }
       if (event.key.toLowerCase() === "f") void toggleFullscreen();
       if (event.key.toLowerCase() === "t") setThumbnailsOpen((current) => !current);
-      if (event.key === "Escape" && !document.fullscreenElement) onClose();
+      if (event.key === "Escape") {
+        if (immersive || document.fullscreenElement) void leaveFullscreen();
+        else onClose();
+      }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [nextPage, onClose, previousPage, toggleFullscreen]);
+  }, [immersive, leaveFullscreen, nextPage, onClose, previousPage, toggleFullscreen]);
 
   useEffect(() => {
     if (mode !== "scroll") return;
@@ -367,7 +422,7 @@ export function ComicReader({ onClose }: ComicReaderProps) {
   return (
     <section
       ref={readerRef}
-      className={`reader reader-${mode} ${readingLight ? "reading-light" : ""}`}
+      className={`reader reader-${mode} ${readingLight ? "reading-light" : ""} ${immersive ? "reader-immersive" : ""}`}
       role="dialog"
       aria-modal="true"
       aria-label="Deluxe comic book reader"
@@ -401,7 +456,7 @@ export function ComicReader({ onClose }: ComicReaderProps) {
             {readingLight ? "Night" : "Light"}
           </button>
           <button onClick={toggleFullscreen} aria-label="Toggle fullscreen" title="Fullscreen (F)">
-            {fullscreen ? "Exit full" : "Full screen"}
+            {immersive || fullscreen ? "Exit full" : "Full screen"}
           </button>
           <button className="reader-close" onClick={onClose} aria-label="Close comic reader">×</button>
         </div>
@@ -511,6 +566,13 @@ export function ComicReader({ onClose }: ComicReaderProps) {
           <button onClick={() => setZoom((value) => Math.min(2.2, Number((value + 0.15).toFixed(2))))} disabled={mode === "book" || mode === "scroll"} aria-label="Zoom in">+</button>
         </div>
       </footer>
+
+      {immersive && (
+        <div className="immersive-overlay">
+          <span>{currentLabel}</span>
+          <button onClick={leaveFullscreen} aria-label="Exit fullscreen reader">Exit full screen</button>
+        </div>
+      )}
     </section>
   );
 }

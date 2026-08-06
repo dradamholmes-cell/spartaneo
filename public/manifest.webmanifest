@@ -1,0 +1,20 @@
+{
+  "name": "The Last Party of 1999",
+  "short_name": "Last Party 1999",
+  "description": "The deluxe OGB Originals comic reader.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "any",
+  "background_color": "#050606",
+  "theme_color": "#050606",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
