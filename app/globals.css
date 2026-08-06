@@ -106,7 +106,7 @@ img { display: block; max-width: 100%; }
 .subtitle { margin: 5px 0 28px; color: var(--paper); font-family: Georgia, serif; font-style: italic; font-size: clamp(20px, 2vw, 31px); }
 .hero-description { max-width: 580px; margin: 0; color: #d5cbb5; font-family: Georgia, serif; font-size: 17px; line-height: 1.65; }
 .hero-actions { display: flex; align-items: center; gap: 18px; margin-top: 34px; flex-wrap: wrap; }
-.primary-action, .secondary-action {
+.primary-action, .secondary-action, .facebook-action {
   min-height: 54px;
   display: inline-flex;
   align-items: center;
@@ -123,8 +123,11 @@ img { display: block; max-width: 100%; }
 }
 .primary-action { background: var(--paper); color: var(--ink); }
 .secondary-action { background: rgba(5,6,6,.72); }
-.primary-action:hover, .secondary-action:hover { transform: translateY(-3px); }
+.facebook-action { background: #1877f2; border-color: #4c93ee; color: #fff; }
+.facebook-mark { width: 21px; height: 21px; display: inline-grid; place-items: center; border-radius: 50%; background: #fff; color: #1877f2; font-family: Arial, sans-serif; font-size: 17px; font-weight: 900; line-height: 1; }
+.primary-action:hover, .secondary-action:hover, .facebook-action:hover { transform: translateY(-3px); }
 .secondary-action:hover { background: var(--red); }
+.facebook-action:hover { background: #0e65d8; }
 .play-icon { color: var(--red); font-size: 11px; }
 .quick-facts { display: flex; gap: 0; margin: 42px 0 0; }
 .quick-facts div { min-width: 120px; padding: 0 28px; border-left: 1px solid var(--line); }
@@ -243,7 +246,7 @@ footer:not(.reader-controls) { min-height: 150px; padding: 42px clamp(22px, 7vw,
 .reader-mode-switch button:hover { color: var(--paper); }
 .reader-mode-switch button.active { background: var(--paper); color: var(--ink); box-shadow: 0 2px 8px rgba(0,0,0,.45); }
 .reader-header-actions { display: flex; align-items: center; justify-content: flex-end; gap: 7px; }
-.reader-header-actions button, .quality-badge {
+.reader-header-actions button, .reader-header-actions .reader-facebook, .quality-badge {
   height: 34px;
   padding: 0 11px;
   display: inline-flex;
@@ -258,7 +261,9 @@ footer:not(.reader-controls) { min-height: 150px; padding: 42px clamp(22px, 7vw,
   text-transform: uppercase;
 }
 .reader-header-actions button { cursor: pointer; }
-.reader-header-actions button:hover { border-color: var(--paper); color: var(--paper); }
+.reader-header-actions .reader-facebook { border-color: rgba(24,119,242,.75); background: rgba(24,119,242,.18); color: #86b9fb; }
+.reader-header-actions .reader-facebook span { font-family: Arial, sans-serif; font-size: 13px; font-weight: 900; text-transform: none; }
+.reader-header-actions button:hover, .reader-header-actions .reader-facebook:hover { border-color: var(--paper); color: var(--paper); }
 .reader-header-actions .reader-close { width: 38px; padding: 0; color: var(--paper); font-family: Arial, sans-serif; font-size: 24px; line-height: 1; }
 .quality-badge { border-color: rgba(47, 140, 121, .55); color: #6fc4b1; background: rgba(47, 140, 121, .09); }
 
@@ -503,7 +508,7 @@ footer:not(.reader-controls) { min-height: 150px; padding: 42px clamp(22px, 7vw,
   .reader-title strong { font-size: 9px; }
   .reader-ogb { width: 38px; height: 29px; font-size: 16px; }
   .reader-header-actions { gap: 4px; }
-  .reader-header-actions button { height: 31px; padding-inline: 8px; font-size: 7px; }
+  .reader-header-actions button, .reader-header-actions .reader-facebook { height: 31px; padding-inline: 8px; font-size: 7px; }
   .reader-header-actions button:first-of-type { display: none; }
   .reader-header-actions .reader-close { width: 33px; font-size: 21px; }
   .reader-mode-switch { width: 100%; }

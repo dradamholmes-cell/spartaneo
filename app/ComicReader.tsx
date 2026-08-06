@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { MutableRefObject, TouchEvent } from "react";
 import type { PageFlip } from "page-flip";
+import { FACEBOOK_SHARE_URL } from "./social";
 
 const PAGE_COUNT = 24;
 const COVER_IMAGE = "/comic/issue-1/cover-hq.jpg";
@@ -468,6 +469,16 @@ export function ComicReader({ onClose }: ComicReaderProps) {
 
         <div className="reader-header-actions">
           <span className="quality-badge" title="Rendered from the print-ready master at 300 DPI">HQ · 300 DPI</span>
+          <a
+            className="reader-facebook"
+            href={FACEBOOK_SHARE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Share The Last Party of 1999 on Facebook"
+            title="Share on Facebook"
+          >
+            <span aria-hidden="true">f</span> Share
+          </a>
           <button onClick={() => setReadingLight((current) => !current)} aria-label="Toggle reading light" title="Reading light">
             {readingLight ? "Night" : "Light"}
           </button>

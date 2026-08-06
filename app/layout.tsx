@@ -34,9 +34,9 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       type: "website",
       url: base,
-      images: [{ url: new URL("/og.png", base).toString(), width: 1536, height: 1024, alt: "The Last Party of 1999 Issue 1" }],
+      images: [{ url: new URL("/og.png?v=20260806", base).toString(), width: 1536, height: 1024, alt: "The Last Party of 1999 Issue 1" }],
     },
-    twitter: { card: "summary_large_image", title, description, images: [new URL("/og.png", base).toString()] },
+    twitter: { card: "summary_large_image", title, description, images: [new URL("/og.png?v=20260806", base).toString()] },
   };
 }
 

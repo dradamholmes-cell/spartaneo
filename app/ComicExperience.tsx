@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { ComicReader } from "./ComicReader";
+import { FACEBOOK_SHARE_URL } from "./social";
 
 const LULU_URL =
   "https://www.lulu.com/shop/adam-holmes/the-last-party-of-1999/paperback/product-dy4wmeq.html";
@@ -49,6 +50,16 @@ export function ComicExperience() {
             <a className="secondary-action" href={LULU_URL} target="_blank" rel="noreferrer">
               Get the print edition <span>↗</span>
             </a>
+            <a
+              className="facebook-action"
+              href={FACEBOOK_SHARE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Share The Last Party of 1999 on Facebook"
+            >
+              <span className="facebook-mark" aria-hidden="true">f</span>
+              Share to Facebook
+            </a>
           </div>
           <dl className="quick-facts">
             <div><dt>24</dt><dd>full-color pages</dd></div>
@@ -89,6 +100,7 @@ export function ComicExperience() {
               <div className="book-actions">
                 <button onClick={openReader}>Open reader</button>
                 <a href={LULU_URL} target="_blank" rel="noreferrer">Buy print ↗</a>
+                <a href={FACEBOOK_SHARE_URL} target="_blank" rel="noopener noreferrer">Share on Facebook ↗</a>
               </div>
             </div>
           </article>
