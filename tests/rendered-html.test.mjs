@@ -54,6 +54,8 @@ test("ships the complete deluxe reader and print-quality assets", async () => {
   assert.match(readerSource, /requestFullscreen/);
   assert.match(readerSource, /reader-immersive/);
   assert.match(readerSource, /visualViewport/);
+  assert.match(readerSource, /phonePortrait/);
+  assert.match(readerSource, /modeBeforeFullscreen/);
   assert.match(readerSource, /"book" \| "single" \| "spread" \| "scroll"/);
   assert.match(readerSource, /PageFlip/);
   assert.match(readerSource, /HQ · 300 DPI/);

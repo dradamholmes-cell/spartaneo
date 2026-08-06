@@ -199,6 +199,7 @@ export function ComicReader({ onClose }: ComicReaderProps) {
   const bookControllerRef = useRef<BookController | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const touchStart = useRef<number | null>(null);
+  const modeBeforeFullscreen = useRef<ReaderMode | null>(null);
   const [page, setPage] = useState(savedReaderPage);
   const [bookPage, setBookPage] = useState(() => pageToBookPage(savedReaderPage()));
   const [mode, setMode] = useState<ReaderMode>(savedReaderMode);
@@ -292,6 +293,12 @@ export function ComicReader({ onClose }: ComicReaderProps) {
 
   const leaveFullscreen = useCallback(async () => {
     setImmersive(false);
+    const previousMode = modeBeforeFullscreen.current;
+    modeBeforeFullscreen.current = null;
+    if (previousMode) {
+      setMode(previousMode);
+      setZoom(1);
+    }
     const webkitDocument = document as Document & {
       webkitFullscreenElement?: Element | null;
       webkitExitFullscreen?: () => Promise<void> | void;
@@ -311,6 +318,15 @@ export function ComicReader({ onClose }: ComicReaderProps) {
     }
 
     setThumbnailsOpen(false);
+    const phonePortrait = window.matchMedia("(max-width: 760px) and (orientation: portrait)").matches
+      || (window.innerWidth <= 760 && window.innerHeight >= window.innerWidth);
+    if (phonePortrait && (mode === "book" || mode === "spread")) {
+      modeBeforeFullscreen.current = mode;
+      setMode("single");
+      setZoom(1);
+    } else {
+      modeBeforeFullscreen.current = null;
+    }
     setImmersive(true);
     const element = readerRef.current as (HTMLElement & {
       webkitRequestFullscreen?: () => Promise<void> | void;
@@ -321,7 +337,7 @@ export function ComicReader({ onClose }: ComicReaderProps) {
     } catch {
       // iPhone browsers do not expose element fullscreen; immersive CSS is the fallback.
     }
-  }, [immersive, leaveFullscreen]);
+  }, [immersive, leaveFullscreen, mode]);
 
   useEffect(() => {
     const oldOverflow = document.body.style.overflow;
