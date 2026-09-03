@@ -40,6 +40,49 @@ const goFundMe =
 export default function HannahPage() {
   return (
     <main className="hannah-page">
+      <style>{`
+        .hannah-page { min-height: 100vh; background: #f6f0fa; color: #2d1738; }
+        .hannah-page .eyebrow { color: #7b4b91; }
+        .hannah-hero { position: relative; overflow: hidden; isolation: isolate; min-height: 720px; display: grid; align-items: center; padding: 64px clamp(24px, 7vw, 110px); background: radial-gradient(circle at 75% 22%, rgba(255,255,255,.9), transparent 20rem), linear-gradient(135deg,#f9f4ff 0%,#e9daf4 45%,#fff2dd 100%); border-bottom: 1px solid rgba(88,45,112,.13); }
+        .hannah-hero::before, .hannah-hero::after { content: ""; position: absolute; border-radius: 50%; z-index: -2; filter: blur(1px); }
+        .hannah-hero::before { width: 650px; height: 650px; right: -180px; top: -100px; background: radial-gradient(circle,rgba(129,72,158,.22),rgba(129,72,158,0)); }
+        .hannah-hero::after { width: 780px; height: 780px; left: -270px; bottom: -450px; background: radial-gradient(circle,rgba(255,196,109,.26),rgba(255,196,109,0)); }
+        .hannah-hero-glow { position: absolute; inset: 0; z-index: -1; opacity: .55; background-image: radial-gradient(circle at 12% 25%, rgba(255,255,255,.95) 0 2px, transparent 3px), radial-gradient(circle at 72% 18%, rgba(255,255,255,.9) 0 1px, transparent 2px), radial-gradient(circle at 44% 78%, rgba(119,62,149,.22) 0 2px, transparent 3px); background-size: 120px 120px, 160px 160px, 145px 145px; }
+        .hannah-hero-inner { width: min(850px,100%); }
+        .hannah-back { display: inline-flex; margin-bottom: 70px; font-size: 12px; letter-spacing: .12em; font-weight: 900; color: #6d5279; }
+        .hannah-hero h1 { margin: 16px 0 8px; font-family: Georgia,"Times New Roman",serif; font-size: clamp(66px,11vw,142px); line-height: .78; letter-spacing: -.055em; color: #3a1748; text-shadow: 0 6px 24px rgba(77,38,96,.12); }
+        .hannah-hero h1 span { display: block; margin-top: .2em; font-family: Arial,Helvetica,sans-serif; font-size: .28em; letter-spacing: .34em; color: #8b5aa0; }
+        .hannah-dates { margin: 28px 0 0; font-size: 14px; letter-spacing: .2em; font-weight: 900; color: #6f557c; }
+        .hannah-hero-copy { max-width: 660px; margin: 28px 0 34px; font-family: Georgia,"Times New Roman",serif; font-size: clamp(22px,3vw,34px); line-height: 1.35; color: #594061; }
+        .hannah-hero-actions,.hannah-share-row { display: flex; flex-wrap: wrap; gap: 12px; }
+        .hannah-hero-actions { margin-bottom: 18px; }
+        .hannah-shop-button,.hannah-support-button,.hannah-share-primary,.hannah-share-secondary { min-height: 50px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 0 22px; border: 1px solid rgba(84,41,105,.2); font-size: 11px; font-weight: 900; letter-spacing: .08em; cursor: pointer; }
+        .hannah-shop-button,.hannah-share-primary { background: #54296a; color: white; border-color: #54296a; }
+        .hannah-support-button { background: #fff; color: #54296a; box-shadow: 0 8px 28px rgba(76,38,94,.1); }
+        .hannah-support-button.large { min-height: 58px; padding-inline: 30px; }
+        .hannah-share-secondary { background: rgba(255,255,255,.72); color: #54296a; }
+        .hannah-message,.hannah-share-panel,.hannah-support-panel { display: grid; grid-template-columns: minmax(0,.8fr) minmax(320px,1.2fr); gap: clamp(30px,7vw,100px); align-items: center; padding: 72px clamp(24px,7vw,110px); }
+        .hannah-message { background: #fffdfa; }
+        .hannah-message h2,.hannah-share-panel h2,.hannah-support-panel h2 { margin: 10px 0 0; font-family: Georgia,"Times New Roman",serif; font-size: clamp(36px,5vw,64px); line-height: 1; color: #3c2147; }
+        .hannah-message > p,.hannah-share-panel p,.hannah-support-panel p { margin: 0; color: #786b7b; line-height: 1.75; font-size: 17px; }
+        .hannah-share-panel { background: linear-gradient(135deg,#f3e8f8,#fff9ef); border-top: 1px solid rgba(84,41,106,.1); }
+        .hannah-support-panel { background: #2f1939; color: white; }
+        .hannah-support-panel .eyebrow { color: #d8a7eb; }
+        .hannah-support-panel h2 { color: white; }
+        .hannah-support-panel p { color: #d8c9dc; }
+        .hannah-support-panel .hannah-support-button { justify-self: start; }
+        #memorial-collection .merch-section { color: #321b3c; }
+        #memorial-collection .merch-heading h2,#memorial-collection .merch-card h3 { color: #321b3c; }
+        #memorial-collection .merch-heading p,#memorial-collection .merch-card p,#memorial-collection .merch-price-row span { color: #716379; }
+        #memorial-collection .merch-card { background: rgba(255,255,255,.9); border-color: rgba(83,44,103,.14); box-shadow: 0 18px 60px rgba(81,48,97,.1); }
+        @media (max-width: 760px) {
+          .hannah-hero { min-height: auto; padding-top: 36px; }
+          .hannah-back { margin-bottom: 52px; }
+          .hannah-message,.hannah-share-panel,.hannah-support-panel { grid-template-columns: 1fr; padding-block: 54px; }
+          .hannah-share-row > *,.hannah-hero-actions > * { width: 100%; }
+        }
+      `}</style>
+
       <section className="hannah-hero">
         <div className="hannah-hero-glow" aria-hidden="true" />
         <div className="hannah-hero-inner">
