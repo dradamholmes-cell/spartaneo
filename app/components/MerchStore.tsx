@@ -32,6 +32,14 @@ type MerchResponse = {
   error?: string;
 };
 
+type MerchStoreProps = {
+  filter?: string;
+  eyebrow?: string;
+  heading?: string;
+  intro?: string;
+  memorialMode?: boolean;
+};
+
 function money(cents: number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -48,6 +56,12 @@ function cleanText(value = "") {
     .trim();
 }
 
+function optionLabel(title: string) {
+  if (/canvas|wall art|poster|print/i.test(title)) return "SIZE";
+  if (/cap|hat|beanie/i.test(title)) return "COLOR / STYLE";
+  return "SIZE / COLOR";
+}
+
 function ProductCard({ product }: { product: MerchProduct }) {
   const variants = useMemo(
     () => (product.variants ?? []).filter((variant) => variant.is_enabled && variant.is_available),
@@ -57,6 +71,7 @@ function ProductCard({ product }: { product: MerchProduct }) {
   const selected = variants.find((variant) => variant.id === variantId) ?? variants[0];
   const image = product.images?.find((candidate) => candidate.is_default)?.src ?? product.images?.[0]?.src;
   const description = cleanText(product.description).slice(0, 190);
+  const label = optionLabel(product.title);
 
   if (!variants.length) return null;
 
@@ -74,7 +89,7 @@ function ProductCard({ product }: { product: MerchProduct }) {
           <span>{variants.length} available option{variants.length === 1 ? "" : "s"}</span>
         </div>
         <label className="merch-select-label" htmlFor={`variant-${product.id}`}>
-          SIZE / COLOR
+          {label}
         </label>
         <select
           id={`variant-${product.id}`}
@@ -102,7 +117,13 @@ function ProductCard({ product }: { product: MerchProduct }) {
   );
 }
 
-export default function MerchStore() {
+export default function MerchStore({
+  filter,
+  eyebrow = "SPARTANEO SWAG",
+  heading = "ORDER NOW",
+  intro = "Hannah memorial designs and Spartaneo gear. Only currently available options are shown.",
+  memorialMode = false,
+}: MerchStoreProps = {}) {
   const [products, setProducts] = useState<MerchProduct[]>([]);
   const [state, setState] = useState<"loading" | "ready" | "empty" | "error">("loading");
 
@@ -117,9 +138,11 @@ export default function MerchStore() {
         });
         const payload = (await response.json()) as MerchResponse;
         if (!response.ok) throw new Error(payload.error || "merch_unavailable");
-        const available = (payload.data ?? []).filter((product) =>
-          (product.variants ?? []).some((variant) => variant.is_enabled && variant.is_available),
-        );
+        const available = (payload.data ?? [])
+          .filter((product) =>
+            (product.variants ?? []).some((variant) => variant.is_enabled && variant.is_available),
+          )
+          .filter((product) => !filter || `${product.title} ${product.description ?? ""}`.toLowerCase().includes(filter.toLowerCase()));
         setProducts(available);
         setState(available.length ? "ready" : "empty");
       } catch (error) {
@@ -130,27 +153,70 @@ export default function MerchStore() {
 
     load();
     return () => controller.abort();
-  }, []);
+  }, [filter]);
+
+  const backdropImages = memorialMode
+    ? products
+        .map((product) => product.images?.find((candidate) => candidate.is_default)?.src ?? product.images?.[0]?.src)
+        .filter((src): src is string => Boolean(src))
+        .slice(0, 6)
+    : [];
 
   return (
-    <section className="merch-section" id="merch">
+    <section className="merch-section" id="merch" style={memorialMode ? { position: "relative", overflow: "hidden", isolation: "isolate" } : undefined}>
+      {memorialMode && backdropImages.length ? (
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: -2,
+            opacity: 0.17,
+            display: "grid",
+            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+            gap: 18,
+            padding: 28,
+            transform: "rotate(-2deg) scale(1.08)",
+            filter: "saturate(.8) brightness(1.25)",
+          }}
+        >
+          {backdropImages.map((src, index) => (
+            <img
+              key={`${src}-${index}`}
+              src={src}
+              alt=""
+              style={{ width: "100%", height: 290, objectFit: "contain", background: "rgba(255,255,255,.64)", borderRadius: 22 }}
+            />
+          ))}
+        </div>
+      ) : null}
+      {memorialMode ? (
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: -1,
+            background: "linear-gradient(180deg, rgba(246,239,250,.88), rgba(255,250,245,.96) 45%, rgba(235,223,245,.94))",
+          }}
+        />
+      ) : null}
+
       <div className="merch-heading">
         <div>
-          <p className="eyebrow">SPARTANEO SWAG</p>
-          <h2>ORDER NOW</h2>
+          <p className="eyebrow">{eyebrow}</p>
+          <h2>{heading}</h2>
         </div>
-        <p>
-          Hannah memorial designs and Spartaneo gear. Only currently available sizes and colors are shown.
-        </p>
+        <p>{intro}</p>
       </div>
 
-      {state === "loading" ? <div className="merch-message">Loading the shirts…</div> : null}
+      {state === "loading" ? <div className="merch-message">Loading the collection…</div> : null}
       {state === "error" ? (
         <div className="merch-message merch-error">
           The merch rack is temporarily offline. The comics and games are still here.
         </div>
       ) : null}
-      {state === "empty" ? <div className="merch-message">No in-stock merch is published right now.</div> : null}
+      {state === "empty" ? <div className="merch-message">No matching in-stock merch is published right now.</div> : null}
       {state === "ready" ? (
         <div className="merch-grid">
           {products.map((product) => (
