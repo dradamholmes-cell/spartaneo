@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import MerchStore from "../components/MerchStore";
 import HannahShareButtons from "./HannahShareButtons";
+import IzzyProductBuilder from "./IzzyProductBuilder";
 
 export const metadata: Metadata = {
   title: "Hannah Sullivan Memorial Collection | Spartaneo",
@@ -75,11 +75,39 @@ export default function HannahPage() {
         #memorial-collection .merch-heading h2,#memorial-collection .merch-card h3 { color: #321b3c; }
         #memorial-collection .merch-heading p,#memorial-collection .merch-card p,#memorial-collection .merch-price-row span { color: #716379; }
         #memorial-collection .merch-card { background: rgba(255,255,255,.9); border-color: rgba(83,44,103,.14); box-shadow: 0 18px 60px rgba(81,48,97,.1); }
+        .izzy-builder { padding: 78px clamp(24px,7vw,110px); background: #fffdfa; border-top: 1px solid rgba(84,41,106,.1); border-bottom: 1px solid rgba(84,41,106,.1); }
+        .izzy-builder-heading { max-width: 820px; margin-bottom: 38px; }
+        .izzy-builder-heading h2 { margin: 9px 0 14px; font-family: Georgia,"Times New Roman",serif; font-size: clamp(38px,5vw,66px); line-height: .98; color: #3c2147; }
+        .izzy-builder-heading > p:last-child { color: #786b7b; font-size: 17px; line-height: 1.6; }
+        .builder-layout { display: grid; grid-template-columns: minmax(0,1.35fr) minmax(310px,.65fr); gap: clamp(28px,5vw,70px); align-items: start; }
+        .builder-steps { display: grid; gap: 42px; }
+        .builder-step { display: grid; grid-template-columns: 44px 1fr; gap: 18px; }
+        .builder-step > strong { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: #54296a; color: #fff; font-size: 18px; }
+        .builder-step h3,.builder-preview h3 { margin: 8px 0 16px; color: #3c2147; }
+        .builder-type-row { display: flex; flex-wrap: wrap; gap: 9px; }
+        .builder-type-row button { min-height: 44px; padding: 0 16px; border: 1px solid rgba(84,41,106,.25); border-radius: 999px; background: #fff; color: #54296a; font-weight: 900; font-size: 11px; letter-spacing: .07em; cursor: pointer; }
+        .builder-type-row button.is-active { background: #54296a; color: #fff; }
+        .builder-design-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 13px; }
+        .builder-design-grid button { padding: 0; overflow: hidden; border: 2px solid transparent; border-radius: 16px; background: #f2eaf5; color: #43264e; cursor: pointer; text-align: left; }
+        .builder-design-grid button.is-active { border-color: #7d4693; box-shadow: 0 0 0 3px rgba(125,70,147,.13); }
+        .builder-design-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; background: #f1eef1; }
+        .builder-design-grid span { min-height: 64px; display: block; padding: 10px; font-size: 12px; font-weight: 800; line-height: 1.35; }
+        .builder-preview { position: sticky; top: 24px; padding: 20px; border-radius: 24px; background: linear-gradient(145deg,#efe2f4,#fff7e9); box-shadow: 0 22px 60px rgba(81,48,97,.15); }
+        .builder-preview > img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 17px; background: white; }
+        .builder-preview-label { color: #7b4b91; font-size: 10px; font-weight: 900; letter-spacing: .16em; }
+        .builder-preview h3 { font-size: 22px; line-height: 1.18; }
+        .builder-preview > p:not(.builder-preview-label) { color: #75647b; font-size: 13px; line-height: 1.5; }
+        .builder-price { color: #54296a; font-size: 24px; font-weight: 950; }
+        .builder-preview > a { min-height: 54px; margin-top: 16px; display: flex; align-items: center; justify-content: center; border-radius: 999px; background: #54296a; color: #fff; font-size: 12px; font-weight: 950; letter-spacing: .08em; }
+        .builder-status { padding: 28px; border: 1px solid rgba(84,41,106,.15); color: #6f557c; text-align: center; }
         @media (max-width: 760px) {
           .hannah-hero { min-height: auto; padding-top: 36px; }
           .hannah-back { margin-bottom: 52px; }
           .hannah-message,.hannah-share-panel,.hannah-support-panel { grid-template-columns: 1fr; padding-block: 54px; }
           .hannah-share-row > *,.hannah-hero-actions > * { width: 100%; }
+          .builder-layout { grid-template-columns: 1fr; }
+          .builder-design-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+          .builder-preview { position: static; }
         }
       `}</style>
 
@@ -98,8 +126,8 @@ export default function HannahPage() {
             Not gone — just changed form. Part angel, part stardust, forever loved.
           </p>
           <div className="hannah-hero-actions">
-            <a className="hannah-shop-button" href="#memorial-collection">
-              SHOP THE MEMORIAL COLLECTION ↓
+            <a className="hannah-shop-button" href="#build-izzy-product">
+              BUILD YOUR PRODUCT ↓
             </a>
             <a className="hannah-support-button" href={goFundMe} target="_blank" rel="noopener noreferrer">
               SUPPORT IZZY <span aria-hidden="true">↗</span>
@@ -119,15 +147,7 @@ export default function HannahPage() {
         </p>
       </section>
 
-      <div id="memorial-collection">
-        <MerchStore
-          filter="hannah"
-          eyebrow="HANNAH SULLIVAN MEMORIAL COLLECTION"
-          heading="YOUR LIGHT STILL SHINES"
-          intro="Only currently available Printify options are shown. Shirts keep size/color choices, caps use color/style, and wall art uses size."
-          memorialMode
-        />
-      </div>
+      <IzzyProductBuilder />
 
       <section className="hannah-share-panel">
         <div>

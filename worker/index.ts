@@ -25,6 +25,89 @@ interface ExecutionContext {
   passThroughOnException(): void;
 }
 
+type StorefrontProduct = {
+  id: string;
+  title: string;
+  image: string;
+  price: number;
+  buy_url: string;
+  product_type: "t-shirt" | "hoodie" | "sweatshirt" | "wall-art" | "hat" | "other";
+};
+
+const printifyStorefrontUrl = "https://spartaneo.printify.me/products";
+
+// Public checkout listings used only if Printify's public collection page is temporarily unavailable.
+// These contain no account credentials and every URL is an already-published product.
+const storefrontFallback: StorefrontProduct[] = [
+  { id: "31633214", title: "Her Light Still Shines Memorial Poster", image: "https://images-api.printify.com/mockup/6a9a7e0126ca2a0ca1012f74/114557/106501/her-light-still-shines-memorial-poster.jpg?camera_label=front", price: 1799, buy_url: "https://spartaneo.printify.me/product/31633214", product_type: "wall-art" },
+  { id: "31633037", title: "Same Soul, Better View Memorial Hoodie | Angel Tribute Pullover", image: "https://images-api.printify.com/mockup/6a99e0b6420d45a6370bef02/32912/98424/same-soul-better-view-memorial-hoodie-angel-tribute-pullover.jpg?camera_label=front", price: 3597, buy_url: "https://spartaneo.printify.me/product/31633037", product_type: "hoodie" },
+  { id: "31633029", title: "Memorial Acrylic Wall Art Panel — Personalized Angel Tribute with Name & Dates", image: "https://images-api.printify.com/mockup/6a9a76dc5d46b4504b0e1774/82057/110751/memorial-acrylic-wall-art-panel-personalized-angel-tribute-with-name-dates.jpg?camera_label=front", price: 2365, buy_url: "https://spartaneo.printify.me/product/31633029", product_type: "wall-art" },
+  { id: "31615561", title: "Same Soul Better View Matte Canvas Wall Art — Inspirational Christian Memorial Print", image: "https://images-api.printify.com/mockup/6a99e16a420d45a6370bef59/101413/95788/same-soul-better-view-matte-canvas-wall-art-inspirational-christian-memorial-print.jpg?camera_label=front", price: 2499, buy_url: "https://spartaneo.printify.me/product/31615561", product_type: "wall-art" },
+  { id: "31615546", title: "SULLIVAN Classic Dad Cap | Family Name Hat", image: "https://images-api.printify.com/mockup/6a99e1dd71912d77ed0a0622/105381/135042/sullivan-classic-dad-cap-family-name-hat.jpg?camera_label=front", price: 2999, buy_url: "https://spartaneo.printify.me/product/31615546", product_type: "hat" },
+  { id: "31608157", title: "Same Soul Better View sweatshirt | Angel wings memorial artwork", image: "https://images-api.printify.com/mockup/6a9953b4be182bd8450de122/25459/98502/same-soul-better-view-sweatshirt-angel-wings-memorial-artwork.jpg?camera_label=front", price: 4028, buy_url: "https://spartaneo.printify.me/product/31608157", product_type: "sweatshirt" },
+  { id: "31608156", title: "The Sullivan Name Crest T-Shirt | Family Coat of Arms Tee", image: "https://images-api.printify.com/mockup/6a9953b9be182bd8450de124/12124/92570/the-sullivan-name-crest-t-shirt-family-coat-of-arms-tee.jpg?camera_label=front", price: 2637, buy_url: "https://spartaneo.printify.me/product/31608156", product_type: "t-shirt" },
+  { id: "31608153", title: "Her Light Still Shines Angel Memorial T-Shirt | The Sullivan Name Backprint", image: "https://images-api.printify.com/mockup/6a9953bfbe182bd8450de126/105601/102287/her-light-still-shines-angel-memorial-t-shirt-the-sullivan-name-backprint.jpg?camera_label=front", price: 3052, buy_url: "https://spartaneo.printify.me/product/31608153", product_type: "t-shirt" },
+  { id: "31608150", title: "Celebrating Name Memorial Photo T-Shirt | Personalized Funeral Tribute", image: "https://images-api.printify.com/mockup/6a9953c2be182bd8450de128/105553/102287/celebrating-name-memorial-photo-t-shirt-personalized-funeral-tribute.jpg?camera_label=front", price: 1957, buy_url: "https://spartaneo.printify.me/product/31608150", product_type: "t-shirt" },
+  { id: "31608149", title: "Soul Lovin' Sullivan band artwork T-Shirt | rock tour poster", image: "https://images-api.printify.com/mockup/6a9953c4be182bd8450de12a/105553/102287/soul-lovin-sullivan-band-artwork-t-shirt-rock-tour-poster.jpg?camera_label=front", price: 3052, buy_url: "https://spartaneo.printify.me/product/31608149", product_type: "t-shirt" },
+  { id: "31608147", title: "Soul Lovin' Sullivan T-Shirt | Angel Wings Cross Spiritual Design", image: "https://images-api.printify.com/mockup/6a9953c5be182bd8450de12c/105553/102287/soul-lovin-sullivan-t-shirt-angel-wings-cross-spiritual-design.jpg?camera_label=front", price: 1957, buy_url: "https://spartaneo.printify.me/product/31608147", product_type: "t-shirt" },
+  { id: "31600549", title: "Same Soul. Better View. — Hannah Memorial Tribute Tee", image: "https://images-api.printify.com/mockup/6a9953c8be182bd8450de132/83024/108041/same-soul-better-view-hannah-memorial-tribute-tee.jpg?camera_label=front", price: 2999, buy_url: "https://spartaneo.printify.me/product/31600549", product_type: "t-shirt" },
+];
+
+function htmlDecode(value: string) {
+  return value
+    .replace(/&amp;/g, "&")
+    .replace(/&#x27;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)));
+}
+
+function storefrontType(title: string): StorefrontProduct["product_type"] {
+  if (/hoodie|hooded/i.test(title)) return "hoodie";
+  if (/sweatshirt|crewneck/i.test(title)) return "sweatshirt";
+  if (/poster|canvas|wall art|acrylic/i.test(title)) return "wall-art";
+  if (/cap|hat|beanie/i.test(title)) return "hat";
+  if (/t-?shirt|\btee\b/i.test(title)) return "t-shirt";
+  return "other";
+}
+
+function parseStorefront(html: string): StorefrontProduct[] {
+  const pattern = /<a class="block w-full overflow-hidden" href="\/product\/(\d+)">[\s\S]*?<img src="([^"]+)" alt="([^"]+)"[\s\S]*?data-testid="variantPrice">\$([0-9.]+)/g;
+  const products: StorefrontProduct[] = [];
+  for (const match of html.matchAll(pattern)) {
+    if (products.some((product) => product.id === match[1])) continue;
+    const image = htmlDecode(match[2]);
+    const title = htmlDecode(match[3]);
+    if (!/^https:\/\/images-api\.printify\.com\//.test(image)) continue;
+    products.push({
+      id: match[1],
+      title,
+      image,
+      price: Math.round(Number(match[4]) * 100),
+      buy_url: `https://spartaneo.printify.me/product/${match[1]}`,
+      product_type: storefrontType(title),
+    });
+  }
+  return products;
+}
+
+async function publicStorefront() {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 10000);
+  try {
+    const response = await fetch(printifyStorefrontUrl, {
+      signal: controller.signal,
+      headers: { Accept: "text/html", "User-Agent": "SpartaneoStorefront/1.0" },
+    });
+    if (!response.ok) return storefrontFallback;
+    const products = parseStorefront(await response.text());
+    return products.length ? products : storefrontFallback;
+  } catch {
+    return storefrontFallback;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 const allowedOrigins = new Set([
   "https://spartaneo.com",
   "https://www.spartaneo.com",
@@ -364,6 +447,16 @@ async function merchApi(request: Request, env: Env) {
 const worker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
+
+    if (url.pathname === "/api/izzy-products") {
+      if (request.method !== "GET") return jsonReply({ error: "method_not_allowed" }, 405);
+      const products = (await publicStorefront()).filter(
+        (product) => !/leprechaun|st\. patrick/i.test(product.title),
+      );
+      const response = jsonReply({ data: products, total: products.length });
+      response.headers.set("Cache-Control", "public, max-age=300, stale-while-revalidate=1800");
+      return response;
+    }
 
     if (
       url.pathname.startsWith("/api/merch/") ||

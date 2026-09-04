@@ -105,14 +105,19 @@ export default function Home() {
           <h2 id="izzy-support-title">SUPPORT IZZY</h2>
           <p>Help Izzy after Hannah’s loss. The fundraiser is separate from merch purchases.</p>
         </div>
-        <a
-          className="izzy-support-button"
-          href="https://www.gofundme.com/f/support-izzy-after-hannahs-loss?attribution_id=sl:7d8cce97-2b98-49aa-bc4c-7855601c33d9&lang=en_US&ts=1788364188&utm_campaign=fp_sharesheet&utm_content=amp30-treatment-3&utm_medium=customer&utm_source=facebook_reel"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          SUPPORT IZZY NOW <span aria-hidden="true">↗</span>
-        </a>
+        <div className="izzy-support-actions">
+          <a
+            className="izzy-support-button"
+            href="https://www.gofundme.com/f/support-izzy-after-hannahs-loss?attribution_id=sl:7d8cce97-2b98-49aa-bc4c-7855601c33d9&lang=en_US&ts=1788364188&utm_campaign=fp_sharesheet&utm_content=amp30-treatment-3&utm_medium=customer&utm_source=facebook_reel"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            SUPPORT IZZY NOW <span aria-hidden="true">↗</span>
+          </a>
+          <Link className="izzy-merch-button" href="/hannah#build-izzy-product">
+            BUILD IZZY MERCH →
+          </Link>
+        </div>
       </section>
 
       <MerchStore />

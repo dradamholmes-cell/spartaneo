@@ -40,6 +40,20 @@ type MerchStoreProps = {
   memorialMode?: boolean;
 };
 
+const checkoutByTitle: Record<string, string> = {
+  "same soul better view sweatshirt | angel wings memorial artwork": "https://spartaneo.printify.me/product/31608157",
+  "the sullivan name crest t-shirt | family coat of arms tee": "https://spartaneo.printify.me/product/31608156",
+  "her light still shines angel memorial t-shirt | the sullivan name backprint": "https://spartaneo.printify.me/product/31608153",
+  "celebrating name memorial photo t-shirt | personalized funeral tribute": "https://spartaneo.printify.me/product/31608150",
+  "soul lovin' sullivan band artwork t-shirt | rock tour poster": "https://spartaneo.printify.me/product/31608149",
+  "soul lovin' sullivan t-shirt | angel wings cross spiritual design": "https://spartaneo.printify.me/product/31608147",
+  "same soul. better view. — hannah memorial tribute tee": "https://spartaneo.printify.me/product/31600549",
+};
+
+function normalizedTitle(value: string) {
+  return value.toLowerCase().replace(/[’‘]/g, "'").replace(/\s+/g, " ").trim();
+}
+
 function money(cents: number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -138,10 +152,16 @@ export default function MerchStore({
         });
         const payload = (await response.json()) as MerchResponse;
         if (!response.ok) throw new Error(payload.error || "merch_unavailable");
-        const available = (payload.data ?? [])
+        const keyed = new Map<string, MerchProduct>();
+        for (const product of payload.data ?? []) {
+          const key = normalizedTitle(product.title);
+          keyed.set(key, { ...product, buy_url: product.buy_url || checkoutByTitle[key] || null });
+        }
+        const available = [...keyed.values()]
           .filter((product) =>
             (product.variants ?? []).some((variant) => variant.is_enabled && variant.is_available),
           )
+          .filter((product) => Boolean(product.buy_url))
           .filter((product) => !filter || `${product.title} ${product.description ?? ""}`.toLowerCase().includes(filter.toLowerCase()));
         setProducts(available);
         setState(available.length ? "ready" : "empty");
