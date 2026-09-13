@@ -46,7 +46,7 @@ export default function MerchToolsPage() {
       `}</style>
 
       <section className="tool-top">
-        <Link className="tool-back" href="/">← SPARTANEO HOME</Link>
+        <nav style={{display:"flex",gap:"18px",flexWrap:"wrap"}}><Link className="tool-back" href="/tools">← CREATOR TOOLS</Link><Link className="tool-back" href="/tools/book-runner">BOOK RUNNER</Link><Link className="tool-back" href="/">SPARTANEO HOME</Link></nav>
         <h1>MERCH TOOLS</h1>
         <p>
           Drop in a design, pick what you're making, sanity-check the placement, then jump straight into Printify. Published products automatically flow into the existing storefront without putting your Printify token in the browser.
