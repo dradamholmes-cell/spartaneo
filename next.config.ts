@@ -1,7 +1,19 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  async headers() {
+    return [
+      {
+        source: "/stores/:path*",
+        headers: [
+          {
+            key: "Permissions-Policy",
+            value: "microphone=*",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
