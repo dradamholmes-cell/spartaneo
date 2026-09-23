@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#050506">
+  <title>Spartaneo Arcade — V2 Preview</title>
+  <link rel="stylesheet" href="./arcade-v2.css?v=1">
+  <script type="importmap">
+    {"imports":{"three":"https://unpkg.com/three@0.158.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.158.0/examples/jsm/"}}
+  </script>
+</head>
+<body>
+<div id="app">
+  <div id="game-frame">
+    <div id="hud">
+      <div class="brand">SPARTANEO ARCADE</div>
+      <div class="sub">AFTER HOURS · V2 PREVIEW</div>
+      <div class="pill" id="input-status">INPUT: TOUCH</div>
+    </div>
+
+    <div id="topbar">
+      <button id="pause-btn" aria-label="Pause">PAUSE</button>
+      <button id="sound-btn" aria-label="Toggle sound">SOUND</button>
+      <button id="fullscreen-btn" aria-label="Fullscreen">FULL</button>
+    </div>
+
+    <div id="prompt" hidden>INTERACT</div>
+    <div id="toast" hidden></div>
+
+    <div class="panel" id="intro-panel">
+      <div class="panel-card">
+        <h1>ENTER THE ARCADE</h1>
+        <p>Walk up to a cabinet and hit <b>A</b> on phone, <b>E / ENTER</b> on keyboard, or the main gamepad button.</p>
+        <p>Ring Riot is playable here. Cart League is the next cabinet being connected.</p>
+        <p class="warn">Preview build only — the live site is untouched.</p>
+        <div class="actions"><button id="enter-btn">ENTER ARCADE</button></div>
+      </div>
+    </div>
+
+    <div class="panel" id="cabinet-panel" hidden>
+      <div class="panel-card">
+        <h2 id="cabinet-title">ARCADE CABINET</h2>
+        <p id="cabinet-copy"></p>
+        <div class="actions"><button id="cabinet-close">BACK TO ROOM</button></div>
+      </div>
+    </div>
+
+    <div class="panel" id="fatal-panel" hidden>
+      <div class="panel-card">
+        <h2>ASSET LOAD FAILED</h2>
+        <p id="fatal-copy"></p>
+        <p class="warn">No fake replacement asset was created.</p>
+        <div class="actions"><button id="fatal-close">DISMISS</button></div>
+      </div>
+    </div>
+
+    <div id="touch">
+      <div class="cluster left">
+        <button id="t-up" aria-label="Forward">▲</button>
+        <button id="t-left" aria-label="Turn left">◀</button>
+        <button id="t-down" aria-label="Backward">▼</button>
+        <button id="t-right" aria-label="Turn right">▶</button>
+      </div>
+      <div class="cluster right">
+        <button class="action" id="t-action" aria-label="Interact">A</button>
+      </div>
+    </div>
+
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+  </div>
+</div>
+<script type="module" src="./core-v2.js?v=1"></script>
+</body>
+</html>
