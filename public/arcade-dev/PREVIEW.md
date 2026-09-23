@@ -1,40 +1,51 @@
 # Spartaneo Arcade public dev preview
 
-Current mobile preview: **BUILD 20260923.06 — SOCIAL LOBBY**
+Current preview: **BUILD 20260923.07a — ACCOUNTS + CHARACTER LIBRARY**
 
 Pinned build:
 
-https://raw.githack.com/dradamholmes-cell/spartaneo/4fbfe620ff4c941f78d1b37994d82948e29ee1d5/public/arcade-dev/v7.html
+https://raw.githack.com/dradamholmes-cell/spartaneo/4e2dc855cd6e76528337e5025718afea4a175d70/public/arcade-dev/v8.html
 
-## What BUILD .06 adds
+## What BUILD .07a adds
 
-BUILD .06 wraps the proven no-lag BUILD .05 room instead of changing its renderer.
+BUILD .07a wraps the existing Social Lobby and starts the real Character Forge account foundation without changing the proven lightweight 3D renderer.
 
-- Character picker before entering the arcade.
-- Character choice persists in localStorage.
-- Character button lets you switch later without rebuilding the room.
-- Party drawer with six-character create/join/share flow.
-- Ready toggle and four party slots.
-- Party chat drawer with locally persisted messages.
-- BroadcastChannel presence/chat across same-origin preview tabs.
-- Character and party code are appended to game launch URLs as integration hooks.
-- Visible BUILD 20260923.06 tag.
-- Existing full floor, catalog, mobile thumbstick, 480×270 phone render, and 30 FPS cap remain underneath from BUILD .05.
+- Spartaneo account screen: create account, log in, or continue as guest.
+- Email-first registration while preserving Social Arcade username/password and guest semantics.
+- Secure PBKDF2-SHA256 password hashing and HttpOnly session-cookie helpers in the server implementation.
+- `arcade_users`, `arcade_sessions`, `arcade_characters`, `character_forge_jobs`, and `tencent_connections` Drizzle schema.
+- My Characters library.
+- Active/default character per account.
+- Add the current stock arcade character to My Characters.
+- Use/delete saved character controls.
+- Character Forge panel with photo selection, Tencent provider status, Single Image mode, and **50K face target locked in**.
+- Create a 50K Forge draft job for signed-in non-guest accounts.
+- Account `/me` response includes saved characters, recent Forge jobs, and Tencent connection state.
 
-## Live backend status
+## Account API added
 
-The recovered Social Arcade backend is real and includes authenticated friends/DM routes plus ChatRoom, GameRoom, and PresenceHub Durable Objects. The recovered ChatPage connects to `/ws/chat/<conversationId>` and sends `send_message` packets.
+- `POST /api/arcade-account/register`
+- `POST /api/arcade-account/login`
+- `POST /api/arcade-account/guest`
+- `POST /api/arcade-account/logout`
+- `GET /api/arcade-account/me`
+- `POST /api/arcade-account/characters`
+- `POST /api/arcade-account/characters/:id/active`
+- `DELETE /api/arcade-account/characters/:id`
+- `GET|POST /api/arcade-account/forge-jobs`
 
-**Cross-device party/chat sync is NOT claimed connected in this preview yet.** BUILD .06 deliberately labels its party/chat sync as local/tabs while the existing authenticated Social Arcade identity/conversation model is bridged into this room.
+## Public preview mode
 
-## Game launch contract
+RawGitHack cannot host Spartaneo's D1 API or first-party HttpOnly cookie, so the pinned public preview intentionally uses **LOCAL PREVIEW** account storage while demonstrating the exact UI flow. When served from Spartaneo with D1 bound, it attempts the real account API instead.
 
-Playable game URLs receive:
+## Infrastructure blocker before real account persistence
 
-- `arcade=1`
-- `character=<selected_character_id>`
-- `party=<party_code>` when a party exists
+`.openai/hosting.json` currently has `"d1": null`. The Drizzle schema is now the source of truth; create/bind the D1 database and run `npm run db:generate` before deploying the account backend. A premature hand-written migration was deliberately removed so Drizzle migration metadata cannot silently drift.
 
-Games that do not yet consume these query parameters simply ignore them. The parameters establish one shared integration contract for future upgrades.
+## Tencent status
 
-This branch is development-only. PR #1 stays draft and unmerged until the social-lobby build is tested.
+`.07a` does **not** collect Tencent credentials and does not send the selected photo anywhere. Per-user Tencent connection/session automation is the `.07b` step.
+
+The full Social Lobby, party UI, game floor and no-lag mobile renderer remain underneath from BUILD .06/.05.
+
+This branch is development-only. PR #1 stays draft and unmerged.
