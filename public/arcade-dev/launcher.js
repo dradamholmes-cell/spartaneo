@@ -65,8 +65,18 @@ new MutationObserver(selectFromPanel).observe(cabinetPanel, {
 });
 
 function send(type, payload = {}) {
-  if (!iframe.contentWindow || !activeGame) return;
+  if (!iframe.contentWindow || !activeGame || activeGame.externalPreview) return;
   iframe.contentWindow.postMessage({ channel: CHANNEL, type, payload, sentAt: Date.now() }, window.location.origin);
+}
+
+function configureShell(game) {
+  const external = !!game.externalPreview;
+  pauseButton.hidden = external;
+  soundButton.hidden = external;
+  pauseButton.disabled = external;
+  soundButton.disabled = external;
+  fullscreenButton.hidden = false;
+  backButton.hidden = false;
 }
 
 function launch(game) {
@@ -77,6 +87,7 @@ function launch(game) {
   soundEnabled = true;
   pauseButton.textContent = 'PAUSE';
   soundButton.textContent = 'SOUND ON';
+  configureShell(game);
   shellTitle.textContent = `${game.title} · SPARTANEO ARCADE`;
   loading.textContent = `LOADING ${game.title}…`;
   loading.hidden = false;
@@ -94,6 +105,10 @@ function exitToArcade() {
   activeGame = null;
   selectedGame = null;
   loading.hidden = true;
+  pauseButton.hidden = false;
+  soundButton.hidden = false;
+  pauseButton.disabled = false;
+  soundButton.disabled = false;
   window.SpartaneoArcade?.resume?.();
 }
 
@@ -101,12 +116,14 @@ launchButton.addEventListener('click', () => launch(selectedGame));
 backButton.addEventListener('click', exitToArcade);
 
 pauseButton.addEventListener('click', () => {
+  if (activeGame?.externalPreview) return;
   gamePaused = !gamePaused;
   pauseButton.textContent = gamePaused ? 'RESUME' : 'PAUSE';
   send(gamePaused ? 'shell-pause' : 'shell-resume');
 });
 
 soundButton.addEventListener('click', () => {
+  if (activeGame?.externalPreview) return;
   soundEnabled = !soundEnabled;
   soundButton.textContent = soundEnabled ? 'SOUND ON' : 'SOUND OFF';
   send('shell-sound', { enabled: soundEnabled });
@@ -118,6 +135,14 @@ fullscreenButton.addEventListener('click', async () => {
     else await document.exitFullscreen();
   } catch {
     fullscreenButton.textContent = 'FULLSCREEN UNAVAILABLE';
+  }
+});
+
+iframe.addEventListener('load', () => {
+  if (!activeGame) return;
+  if (activeGame.externalPreview && iframe.src !== 'about:blank') {
+    loading.hidden = true;
+    shellTitle.textContent = `${activeGame.title} · LIVE GAME PREVIEW`;
   }
 });
 
