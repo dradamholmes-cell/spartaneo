@@ -23,6 +23,7 @@ if (!panel || !title || !close || !actions) {
   panel.append(escape);
 
   let selected = null;
+  let lastLaunchAt = 0;
 
   function detectGame() {
     const heading = (title.textContent || '').toUpperCase();
@@ -46,9 +47,13 @@ if (!panel || !title || !close || !actions) {
   }
 
   function launch(event) {
-    event.preventDefault();
-    event.stopPropagation();
+    event?.preventDefault?.();
+    event?.stopPropagation?.();
     if (selected?.id !== 'ring-riot') return;
+    const now = Date.now();
+    if (now - lastLaunchAt < 700) return;
+    lastLaunchAt = now;
+
     const url = 'https://game.spartaneo.com/games/ogb-wrestling/';
     const opened = window.open(url, '_blank');
     if (opened) {
@@ -56,7 +61,6 @@ if (!panel || !title || !close || !actions) {
       backToRoom();
       return;
     }
-    // Popup blockers should not win: fall back to a normal navigation.
     window.location.href = url;
   }
 
@@ -64,18 +68,14 @@ if (!panel || !title || !close || !actions) {
     if (!panel.hidden) detectGame();
   }).observe(panel, { attributes: true, attributeFilter: ['hidden'] });
 
-  // Android browsers can be inconsistent about synthesized click events after
-  // fullscreen/touch interaction. Listen to pointer-up as well as click.
   for (const eventName of ['pointerup', 'click']) {
     close.addEventListener(eventName, backToRoom);
     escape.addEventListener(eventName, backToRoom);
   }
+
+  // Pointer-up is the primary Android path; click is desktop/keyboard fallback.
+  play.addEventListener('pointerup', launch);
   play.addEventListener('click', launch);
-  play.addEventListener('pointerup', event => {
-    // Let click do the launch, but keep the touch from leaking into the room.
-    event.preventDefault();
-    event.stopPropagation();
-  });
 
   window.addEventListener('keydown', event => {
     if (event.key === 'Escape' && !panel.hidden) backToRoom(event);
