@@ -1,0 +1,52 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ring Riot Asset Self-Test</title>
+<style>
+  body{margin:0;background:#050806;color:#d8ffe6;font:700 14px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;padding:24px}
+  h1{color:#48ff87;margin-top:0} .row{padding:10px 12px;margin:8px 0;border:1px solid #294f36;background:#07100b}
+  .pass{border-color:#48ff87;color:#caffd9}.fail{border-color:#ff536d;color:#ffd5dc}.muted{color:#88a693}
+  code{color:#fff} button{padding:10px 14px;background:#0d5125;color:#fff;border:1px solid #59ff90;font:inherit;cursor:pointer}
+</style>
+<h1>RING RIOT · ASSET SELF-TEST</h1>
+<p class="muted">GPU-free test. Verifies the real Adam/Sully GLBs and Ring Riot move pack before WebGL rendering.</p>
+<button id="run">RUN AGAIN</button>
+<div id="out"></div>
+<script>
+const REQUIRED=['idle','walk','run','strike','jab','climb','jump','air','land','grab','throw','block','hit'];
+const CORE=['Hips','Spine','LeftArm','RightArm'];
+const out=document.getElementById('out');
+const norm=name=>String(name||'').replace(/^.*:/,'').replace(/^mixamorig\d*[_:]?/i,'').replace(/\.\d+$/,'');
+function row(label,ok,detail=''){const el=document.createElement('div');el.className='row '+(ok?'pass':'fail');el.textContent=`${ok?'PASS':'FAIL'} · ${label}${detail?' · '+detail:''}`;out.append(el);}
+async function glbJson(url){
+  const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw new Error(`HTTP ${r.status}`);const b=await r.arrayBuffer(),v=new DataView(b);
+  if(v.getUint32(0,true)!==0x46546c67)throw new Error('bad glTF magic');
+  if(v.getUint32(4,true)!==2)throw new Error('not glTF 2.0');
+  if(v.getUint32(8,true)!==b.byteLength)throw new Error('length mismatch');
+  let off=12,json=null;while(off+8<=b.byteLength){const len=v.getUint32(off,true),type=v.getUint32(off+4,true);off+=8;if(type===0x4e4f534a){json=JSON.parse(new TextDecoder().decode(new Uint8Array(b,off,len)).replace(/\0+$/,''));break}off+=len}
+  if(!json)throw new Error('missing JSON chunk');return json;
+}
+function bonesOf(g){const joints=new Set();for(const skin of g.skins||[])for(const i of skin.joints||[])joints.add(i);return new Set([...joints].map(i=>norm(g.nodes?.[i]?.name)).filter(Boolean));}
+async function run(){
+  out.textContent='';document.getElementById('run').disabled=true;
+  try{
+    const mr=await fetch('/api/arcade-assets/ring-riot/moves',{cache:'no-store'});if(!mr.ok)throw new Error(`move pack HTTP ${mr.status}`);const moves=await mr.json();
+    row('move pack format',moves.format===1,`format ${moves.format}`);
+    row('required move names',REQUIRED.every(n=>moves.clips?.[n]),`${REQUIRED.filter(n=>moves.clips?.[n]).length}/${REQUIRED.length}`);
+    for(const id of ['adam','sully']){
+      try{
+        const g=await glbJson(`/api/arcade-assets/character/${id}`),bones=bonesOf(g);
+        row(`${id} glTF`,true,`${(g.nodes||[]).length} nodes · ${(g.meshes||[]).length} mesh · ${(g.skins||[]).length} skin`);
+        row(`${id} core bones`,CORE.every(n=>bones.has(n)),CORE.map(n=>`${n}:${bones.has(n)?'yes':'NO'}`).join(' '));
+        const counts=REQUIRED.map(name=>[name,Object.keys(moves.clips[name]?.rotations||{}).filter(k=>bones.has(norm(k))).length]);
+        const min=Math.min(...counts.map(([,n])=>n));
+        row(`${id} move compatibility`,min>=20,`minimum ${min} matching bone tracks · ${counts.map(([n,c])=>`${n}:${c}`).join(' ')}`);
+        const external=[...(g.images||[]),...(g.buffers||[])].filter(x=>x.uri).length;
+        row(`${id} self-contained GLB`,external===0,`${external} external URI(s)`);
+      }catch(error){row(`${id} asset load`,false,error.message||String(error));}
+    }
+  }catch(error){row('move pack load',false,error.message||String(error));}
+  document.getElementById('run').disabled=false;
+}
+document.getElementById('run').onclick=run;run();
+</script>
