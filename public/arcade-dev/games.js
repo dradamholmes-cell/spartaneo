@@ -4,11 +4,11 @@ export const GAMES = [
     title: "RING RIOT",
     subtitle: "OGB WRESTLING",
     engine: "threejs",
-    status: "SOURCE FOUND",
+    status: "PLAYABLE DEV",
     color: 0xff3b55,
     position: [-4.2, 0, -5.5],
-    copy: "Three.js source located in the Drive folder ogb-wrestling. This cabinet proves the shared launcher/interaction layer before we mirror the game into this branch.",
-    launch: null
+    copy: "The real Ring Riot game is wired into the Spartaneo Arcade shell for development testing. Solo play uses the existing combat, roster and animation systems. Online rooms remain on the live host until the shell is promoted.",
+    launch: "./games/ring-riot/index.html?arcade=1"
   },
   {
     id: "cart-league",
@@ -22,3 +22,7 @@ export const GAMES = [
     launch: null
   }
 ];
+
+if (typeof window !== "undefined") {
+  window.addEventListener("load", () => import("./launcher.js"), { once: true });
+}
