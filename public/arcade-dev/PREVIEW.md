@@ -1,43 +1,40 @@
 # Spartaneo Arcade public dev preview
 
-Current mobile preview: **BUILD 20260923.05**
+Current mobile preview: **BUILD 20260923.06 — SOCIAL LOBBY**
 
 Pinned build:
 
-https://raw.githack.com/dradamholmes-cell/spartaneo/9b13a2f0569873158802cf04375c4fde2a07bd57/public/arcade-dev/v6.html
+https://raw.githack.com/dradamholmes-cell/spartaneo/4fbfe620ff4c941f78d1b37994d82948e29ee1d5/public/arcade-dev/v7.html
 
-## Full floor
+## What BUILD .06 adds
 
-The phone-safe performance baseline from BUILD 20260923.03 is preserved:
+BUILD .06 wraps the proven no-lag BUILD .05 room instead of changing its renderer.
 
-- 480×270 internal render on phones, 640×360 on desktop.
-- Mobile render capped around 30 FPS.
-- No dynamic point lights, animated cabinet glow, or heavy lobby GLBs.
-- First-person mobile thumbstick + A button.
-- Visible build number.
-- Local cabinet sheet with BACK TO ROOM and X controls.
-- Games launch separately so the lightweight arcade remains available underneath.
+- Character picker before entering the arcade.
+- Character choice persists in localStorage.
+- Character button lets you switch later without rebuilding the room.
+- Party drawer with six-character create/join/share flow.
+- Ready toggle and four party slots.
+- Party chat drawer with locally persisted messages.
+- BroadcastChannel presence/chat across same-origin preview tabs.
+- Character and party code are appended to game launch URLs as integration hooks.
+- Visible BUILD 20260923.06 tag.
+- Existing full floor, catalog, mobile thumbstick, 480×270 phone render, and 30 FPS cap remain underneath from BUILD .05.
 
-## Playable cabinets
+## Live backend status
 
-1. Ring Riot — `https://spartaneo.com/games/ogb-wrestling/`
-2. Cart League — `https://comics.spartaneo.com/games/ogb-cart-league`
-3. OGB Bowl-O-Rama — `https://spartaneo.com/games/ogb-bowling/`
-4. Sully's Soiree — `https://spartaneo.itch.io/sullys-soiree`
-5. Bigfoot's Lair — `https://spartaneo.com/bigfoots-lair/`
-6. Oh! So You Think You Can Highschool Musical? — `https://spartaneo.com/highschool-musical/`
+The recovered Social Arcade backend is real and includes authenticated friends/DM routes plus ChatRoom, GameRoom, and PresenceHub Durable Objects. The recovered ChatPage connects to `/ws/chat/<conversationId>` and sends `send_message` packets.
 
-## Coming-soon cabinets
+**Cross-device party/chat sync is NOT claimed connected in this preview yet.** BUILD .06 deliberately labels its party/chat sync as local/tabs while the existing authenticated Social Arcade identity/conversation model is bridged into this room.
 
-- Tennis
-- Pool
-- Mini Golf
-- Basketball
-- Darts 301
-- Werewolf / Mafia
+## Game launch contract
 
-## Catalog
+Playable game URLs receive:
 
-BUILD 20260923.05 adds a **CATALOG** button so every machine can be opened from a lightweight list without walking across the room. Physical cabinets remain in the room as well.
+- `arcade=1`
+- `character=<selected_character_id>`
+- `party=<party_code>` when a party exists
 
-This branch is development-only. PR #1 stays draft and unmerged until the full-floor build is tested.
+Games that do not yet consume these query parameters simply ignore them. The parameters establish one shared integration contract for future upgrades.
+
+This branch is development-only. PR #1 stays draft and unmerged until the social-lobby build is tested.
