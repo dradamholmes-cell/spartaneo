@@ -6,8 +6,7 @@ import { getSessionUser } from "../../../lib/arcade-auth";
 export async function GET(request: Request) {
   const user = await getSessionUser(request);
   if (!user) return Response.json({ error: "NOT_SIGNED_IN" }, { status: 401 });
-  const db = getDb();
-  const jobs = await db
+  const jobs = await getDb()
     .select()
     .from(characterForgeJobs)
     .where(eq(characterForgeJobs.userId, user.id))
@@ -21,23 +20,32 @@ export async function POST(request: Request) {
   if (!user) return Response.json({ error: "NOT_SIGNED_IN" }, { status: 401 });
   if (user.isGuest) return Response.json({ error: "ACCOUNT_REQUIRED_FOR_FORGE" }, { status: 403 });
 
-  let body: { sourceImageKey?: string } = {};
+  let body: { name?: string } = {};
   try {
     body = await request.json();
   } catch {
-    // A draft job can be created before the upload key exists.
+    // Defaults below are intentional.
   }
+  const requestedName = String(body.name || "New Character").trim().slice(0, 80) || "New Character";
   const now = new Date();
   const job = {
     id: crypto.randomUUID(),
     userId: user.id,
     characterId: null,
+    requestedName,
     provider: "tencent-hunyuan",
+    providerModel: "v3.1",
+    inputMode: "single_image",
+    outputFormat: "glb",
     providerJobId: null,
     status: "draft",
     faceTarget: 50000,
-    sourceImageKey: body.sourceImageKey ? String(body.sourceImageKey).slice(0, 1024) : null,
+    sourceImageKey: null,
     outputGlbKey: null,
+    bridgeTokenHash: null,
+    bridgeTokenExpiresAt: null,
+    claimedAt: null,
+    finishedAt: null,
     errorCode: null,
     errorMessage: null,
     createdAt: now,
