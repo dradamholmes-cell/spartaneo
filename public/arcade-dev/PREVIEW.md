@@ -1,28 +1,43 @@
 # Spartaneo Arcade public dev preview
 
-Current mobile preview: **BUILD 20260923.04**
+Current mobile preview: **BUILD 20260923.05**
 
 Pinned build:
 
-https://raw.githack.com/dradamholmes-cell/spartaneo/8577f6d4172e2b6aef55840d34ea9c800b69df21/public/arcade-dev/v5.html
+https://raw.githack.com/dradamholmes-cell/spartaneo/9b13a2f0569873158802cf04375c4fde2a07bd57/public/arcade-dev/v6.html
 
-## What changed from .03
+## Full floor
 
-- Kept the phone-safe 480×270 render and mobile frame cap.
-- Kept the cheap lighting/material path that eliminated the walking lag.
-- **Ring Riot** remains playable from the left cabinet.
-- **Cart League** is now playable from the right cabinet.
-- Cart League launches the already-deployed Spartaneo Godot wrapper at `https://comics.spartaneo.com/games/ogb-cart-league` rather than rewriting or re-exporting the game.
-- The deployed Cart League wrapper retains its mobile controls/fullscreen shell and real golf-cart GLB.
-- Both games open separately so the lightweight arcade room remains available to return to.
-- Visible build number remains in the HUD.
+The phone-safe performance baseline from BUILD 20260923.03 is preserved:
 
-## Test order
+- 480×270 internal render on phones, 640×360 on desktop.
+- Mobile render capped around 30 FPS.
+- No dynamic point lights, animated cabinet glow, or heavy lobby GLBs.
+- First-person mobile thumbstick + A button.
+- Visible build number.
+- Local cabinet sheet with BACK TO ROOM and X controls.
+- Games launch separately so the lightweight arcade remains available underneath.
 
-1. Enter the arcade and confirm walking is still smooth.
-2. Open Ring Riot from the left cabinet.
-3. Return to the arcade tab.
-4. Open Cart League from the right cabinet.
-5. In Cart League, verify the game loads, the cart looks like the real cart rather than a primitive, and the phone controls respond.
+## Playable cabinets
 
-This branch is development-only. PR #1 stays draft and unmerged until the two-game build is tested.
+1. Ring Riot — `https://spartaneo.com/games/ogb-wrestling/`
+2. Cart League — `https://comics.spartaneo.com/games/ogb-cart-league`
+3. OGB Bowl-O-Rama — `https://spartaneo.com/games/ogb-bowling/`
+4. Sully's Soiree — `https://spartaneo.itch.io/sullys-soiree`
+5. Bigfoot's Lair — `https://spartaneo.com/bigfoots-lair/`
+6. Oh! So You Think You Can Highschool Musical? — `https://spartaneo.com/highschool-musical/`
+
+## Coming-soon cabinets
+
+- Tennis
+- Pool
+- Mini Golf
+- Basketball
+- Darts 301
+- Werewolf / Mafia
+
+## Catalog
+
+BUILD 20260923.05 adds a **CATALOG** button so every machine can be opened from a lightweight list without walking across the room. Physical cabinets remain in the room as well.
+
+This branch is development-only. PR #1 stays draft and unmerged until the full-floor build is tested.
