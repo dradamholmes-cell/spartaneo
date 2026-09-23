@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Spartaneo Character Forge Helper",
+  "version": "0.1.0",
+  "description": "Uses your own logged-in Tencent Hunyuan 3D session to complete Spartaneo Character Forge jobs.",
+  "permissions": ["storage", "tabs", "downloads"],
+  "host_permissions": [
+    "https://spartaneo.com/*",
+    "https://www.spartaneo.com/*",
+    "https://comics.spartaneo.com/*",
+    "https://3d.hunyuan.tencent.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://spartaneo.com/*",
+        "https://www.spartaneo.com/*",
+        "https://comics.spartaneo.com/*"
+      ],
+      "js": ["spartaneo.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://3d.hunyuan.tencent.com/*"],
+      "js": ["tencent.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "Spartaneo Character Forge Helper"
+  }
+}
