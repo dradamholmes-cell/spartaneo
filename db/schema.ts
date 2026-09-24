@@ -91,6 +91,27 @@ export const characterForgeJobs = sqliteTable(
   ],
 );
 
+export const arcadeCharacterLaunchTokens = sqliteTable(
+  "arcade_character_launch_tokens",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => arcadeUsers.id, { onDelete: "cascade" }),
+    characterId: text("character_id")
+      .notNull()
+      .references(() => arcadeCharacters.id, { onDelete: "cascade" }),
+    tokenHash: text("token_hash").notNull(),
+    expiresAt: integer("expires_at", { mode: "timestamp_ms" }).notNull(),
+    createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull(),
+  },
+  (table) => [
+    uniqueIndex("arcade_character_launch_token_uq").on(table.tokenHash),
+    index("arcade_character_launch_character_idx").on(table.characterId),
+    index("arcade_character_launch_user_idx").on(table.userId),
+  ],
+);
+
 export const tencentConnections = sqliteTable("tencent_connections", {
   userId: text("user_id")
     .primaryKey()
