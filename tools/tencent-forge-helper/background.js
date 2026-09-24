@@ -39,6 +39,11 @@ async function tellSpartaneo(payload) {
 async function postStatus(status, extra = {}) {
   const job = await getJob();
   if (!job) return { ok: false, error: "NO_ACTIVE_JOB" };
+
+  job.lastStatus = status;
+  job.lastStatusAt = Date.now();
+  await setJob(job);
+
   try {
     const response = await fetch(`${job.baseUrl}${job.statusEndpoint}`, {
       method: "POST",
@@ -89,6 +94,7 @@ async function uploadGlbBytes(base64, providerJobId = null) {
   if (!response.ok) throw new Error(data.error || `OUTPUT_UPLOAD_${response.status}`);
   await tellSpartaneo({ ok: true, status: "ready", ...data });
   await setJob(null);
+  pendingDownloadId = null;
   return data;
 }
 
@@ -107,11 +113,26 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         sendResponse({ ok: false, error: "INVALID_FORGE_BRIDGE_PAYLOAD" });
         return;
       }
+
+      const existing = await getJob();
+      if (existing && existing.jobId !== payload.jobId) {
+        sendResponse({
+          ok: false,
+          error: "ACTIVE_FORGE_JOB_EXISTS",
+          activeJobId: existing.jobId,
+          status: existing.lastStatus || "working",
+        });
+        return;
+      }
+
       const job = {
         ...payload,
-        spartaneoTabId: sender.tab?.id || null,
-        startedAt: Date.now(),
+        spartaneoTabId: sender.tab?.id || existing?.spartaneoTabId || null,
+        startedAt: existing?.startedAt || Date.now(),
+        lastStatus: "pending_login",
+        lastStatusAt: Date.now(),
       };
+      pendingDownloadId = null;
       await setJob(job);
       await postStatus("pending_login");
       const tab = await chrome.tabs.create({ url: "https://3d.hunyuan.tencent.com/", active: true });
@@ -123,6 +144,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     if (message?.type === "forge:get-active") {
       sendResponse({ ok: true, job: await getJob() });
+      return;
+    }
+
+    if (message?.type === "forge:clear-active") {
+      const previous = await getJob();
+      pendingDownloadId = null;
+      await setJob(null);
+      sendResponse({ ok: true, clearedJobId: previous?.jobId || null });
       return;
     }
 
