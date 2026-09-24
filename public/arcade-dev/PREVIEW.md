@@ -1,76 +1,70 @@
 # Spartaneo Arcade public dev preview
 
-Current preview: **BUILD 20260923.07b — PER-USER TENCENT CHARACTER FORGE**
+Current preview: **BUILD 20260924.07c — CUSTOM CHARACTER LAB + GAME HANDOFF**
 
 Pinned build:
 
-https://raw.githack.com/dradamholmes-cell/spartaneo/37fb2a0c809e876a5f233d58c2dcfee0535f3c09/public/arcade-dev/v9.html
+https://raw.githack.com/dradamholmes-cell/spartaneo/fb6b093e4231448131223ae1897b90de2f29d118/public/arcade-dev/v10.html
 
-## What BUILD .07b adds
+## What BUILD .07c adds
 
-BUILD .07b keeps the approved lightweight Social Lobby/arcade renderer underneath and extends .07a into the real Character Forge handoff.
+BUILD .07c wraps the existing .07b Character Forge instead of changing the approved lightweight room renderer.
 
-- Spartaneo accounts + My Characters remain the ownership layer.
-- Character Forge jobs are locked to the observed Tencent flow: **Hunyuan V3.1 / Image to 3D / Single Image / 50K / GLB**.
-- Source photo upload endpoint stores the user's image in the private `ARCADE_FILES` R2 binding.
-- One-time 256-bit browser-helper bridge tokens are stored hashed and expire after 30 minutes.
-- Per-user Tencent connection state: `not_connected`, `pending_login`, `connected`, `daily_limit`, or `needs_attention`.
-- Desktop browser-helper contract opens Tencent in the user's own browser/session; Spartaneo never asks for or stores their Tencent password or email verification code.
-- The helper pauses when Tencent login/verification is needed and resumes after the user completes Tencent's own UI.
-- Helper automation targets visible UI labels rather than private Tencent endpoints: V3.1, Single Image, 50K, Generate Now, Download.
-- When the daily free allowance is exhausted, the job becomes `daily_limit`; the helper stops rather than rotating/bypassing accounts.
-- Generated GLB is validated as glTF 2.0, stored in R2, and registered in My Characters.
-- Android/mobile fallback lets the user generate/download on Tencent normally and import the GLB into the same Forge job.
+- Generated-character library with active-character state.
+- 3D GLB preview viewer with drag/orbit controls and mesh/triangle count.
+- Forge job history with status/error display.
+- Retry action for `daily_limit`, `needs_attention`, failed/error, and cancelled jobs.
+- Cancel + source-photo cleanup for unfinished jobs.
+- Deleting a generated character cleans its GLB/source objects, Forge job records, launch tickets, and active-character pointer.
+- Short-lived custom-character launch tickets keep generated GLBs private instead of exposing permanent public asset URLs.
+- Custom game handoff uses `character=custom:<id>`, `characterName=<name>`, and `characterModel=<ticketed GLB URL>`.
+- Shared game helper: `public/arcade-dev/arcade-character-runtime.js`.
+- Ring Riot dev shim now accepts a custom character as a real roster/fighter model when a valid Character Forge handoff is present.
+- Dev-only Ring Riot test launcher: `public/arcade-dev/ring-riot-custom-test.html`.
 
-## Browser helper
+## Character model endpoints
 
-Development helper lives at:
+Signed-in account preview:
 
-`tools/tencent-forge-helper/`
+- `GET /api/arcade-account/characters/:id/model`
 
-Files:
+Game handoff:
 
-- `manifest.json`
-- `background.js`
-- `spartaneo.js`
-- `tencent.js`
-- `README.md`
+- `POST /api/arcade-account/characters/:id/launch`
+- `GET /api/arcade-character/:id/model?ticket=<short-lived-ticket>`
 
-This is desktop Chrome/Chromium development tooling for now. Android Chrome uses the manual GLB-return path.
+Game tickets are random, stored hashed in D1, expire after 30 minutes, and old expired tickets are pruned when new tickets are created.
 
-## Forge API / storage surface
+## Existing .07b Character Forge
 
-Account-facing:
+The underlying Forge remains locked to the observed Tencent flow:
 
-- `GET|POST /api/arcade-account/forge-jobs`
-- `POST /api/arcade-account/forge-jobs/:id/source`
-- `POST /api/arcade-account/forge-jobs/:id/bridge`
-- `GET /api/arcade-account/forge-jobs/:id/output`
-- `POST /api/arcade-account/forge-jobs/:id/manual-output`
-- `GET|POST /api/arcade-account/tencent`
+- Hunyuan V3.1
+- Image to 3D
+- Single Image
+- 50K
+- GLB
 
-Short-lived helper bridge:
+Source photos use private `ARCADE_FILES` R2 storage. A successful GLB finalization clears the stored source-photo key and attempts to delete the source object immediately. Tencent passwords and email verification codes stay on Tencent.
 
-- `GET /api/forge-bridge/jobs/:id/source`
-- `POST /api/forge-bridge/jobs/:id/status`
-- `POST /api/forge-bridge/jobs/:id/output`
+Desktop helper lives at `tools/tencent-forge-helper/`. Android/mobile still has the manual GLB-import fallback.
 
 ## Hosting bindings
 
-The dev branch now declares the bindings expected by the code:
+The dev branch declares:
 
 - D1: `DB`
 - R2: `ARCADE_FILES`
 
-The repo's Sites/Vite plugin already maps the names declared in `.openai/hosting.json` into local Cloudflare bindings. No production deployment or merge has been performed.
+No production deployment or merge has been performed.
 
 ## Migration note
 
-The Drizzle schema is the source of truth. `npm run db:generate` still needs to be run in a real project environment after/before provisioning the deployed D1 schema; the branch intentionally does not carry a guessed hand-written migration.
+The Drizzle schema is the source of truth and now includes account/session data, Forge jobs, Tencent state, and custom-character launch tickets. `npm run db:generate` still needs to be run in the real project environment before the first persisted D1 dev deployment.
 
 ## Public preview limitations
 
-RawGitHack cannot provide D1/R2 or first-party HttpOnly cookies, so the pinned build uses **LOCAL PREVIEW** account state. It demonstrates the .07b UI, phone/manual return path, and full underlying arcade, but a real Tencent bridge job can only run when the same build is served from the Spartaneo host with D1/R2 available.
+RawGitHack cannot provide D1/R2 or first-party HttpOnly cookies, so the public build uses local preview account state. The GLB preview and real ticketed model handoff require the D1/R2 dev host because there is no real generated model file on RawGitHack.
 
 The Social Lobby, parties, game floor and no-lag mobile renderer remain underneath from BUILD .06/.05.
 
