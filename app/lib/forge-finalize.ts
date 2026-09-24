@@ -1,7 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import { getDb } from "../../db";
 import { arcadeCharacters, characterForgeJobs } from "../../db/schema";
-import { forgeOutputKey, putArcadeFile } from "./arcade-files";
+import { deleteArcadeFile, forgeOutputKey, putArcadeFile } from "./arcade-files";
 
 const MAX_GLB_BYTES = 75 * 1024 * 1024;
 
@@ -67,6 +67,7 @@ export async function finalizeForgeGlb(jobId: string, userId: string, bytes: Arr
       characterId,
       providerJobId: providerJobId || job.providerJobId,
       outputGlbKey: key,
+      sourceImageKey: null,
       status: "ready",
       finishedAt: now,
       bridgeTokenHash: null,
@@ -77,5 +78,16 @@ export async function finalizeForgeGlb(jobId: string, userId: string, bytes: Arr
     })
     .where(and(eq(characterForgeJobs.id, jobId), eq(characterForgeJobs.userId, userId)));
 
-  return { ok: true, characterId, key, bytes: bytes.byteLength } as const;
+  // Privacy/storage cleanup: once a valid GLB is safely stored and registered,
+  // the original source photo is no longer needed. Failure to delete the photo
+  // must not undo a successful character generation, so cleanup is best-effort.
+  if (job.sourceImageKey) {
+    try {
+      await deleteArcadeFile(job.sourceImageKey);
+    } catch {
+      // A later maintenance sweep can remove any rare orphaned source object.
+    }
+  }
+
+  return { ok: true, characterId, key, bytes: bytes.byteLength, sourceDeleted: Boolean(job.sourceImageKey) } as const;
 }
