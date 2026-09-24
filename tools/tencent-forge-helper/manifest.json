@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Spartaneo Character Forge Helper",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Uses your own logged-in Tencent Hunyuan 3D session to complete Spartaneo Character Forge jobs.",
   "permissions": ["storage", "tabs", "downloads"],
   "host_permissions": [
@@ -30,6 +30,7 @@
     }
   ],
   "action": {
-    "default_title": "Spartaneo Character Forge Helper"
+    "default_title": "Spartaneo Character Forge Helper",
+    "default_popup": "popup.html"
   }
 }
