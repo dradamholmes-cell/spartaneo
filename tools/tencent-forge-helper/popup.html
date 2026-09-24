@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spartaneo Forge Helper</title>
+<style>
+*{box-sizing:border-box}body{margin:0;width:320px;background:#07100c;color:#eefdf1;font-family:Arial,sans-serif;padding:14px}h1{margin:0 0 6px;color:#69ff97;font:900 16px 'Courier New',monospace}p{margin:5px 0;color:#a8bbaa;font-size:11px;line-height:1.4}.card{border:1px solid #36513f;background:#0b120e;padding:10px;margin-top:10px}.row{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid #1e2b22;font:700 10px 'Courier New',monospace}.row:last-child{border:0}.ok{color:#72ff9d}.warn{color:#e7cc73}.bad{color:#ff9da7}button{width:100%;min-height:38px;margin-top:8px;border:1px solid #4f6b57;background:#101713;color:#fff;border-radius:4px;font-weight:900}.green{border-color:#62ed89;background:#155d2f}.danger{border-color:#9d4d56;background:#32141a}.small{font-size:9px;color:#8fa391}code{font-size:9px;color:#b8cabb;word-break:break-all}
+</style>
+</head>
+<body>
+<h1>SPARTANEO CHARACTER FORGE</h1>
+<p>Uses your own Tencent login and free generations. Spartaneo never receives your Tencent password or email verification code.</p>
+<div class="card">
+  <div class="row"><span>HELPER</span><span id="helper" class="ok">READY</span></div>
+  <div class="row"><span>JOB</span><span id="job">NONE</span></div>
+  <div class="row"><span>STATUS</span><span id="status" class="warn">IDLE</span></div>
+  <div class="row"><span>STARTED</span><span id="started">—</span></div>
+</div>
+<button id="openTencent" class="green">OPEN TENCENT HY3D</button>
+<button id="openSpartaneo">OPEN SPARTANEO</button>
+<button id="clear" class="danger" hidden>CLEAR STUCK JOB</button>
+<p id="note" class="small">Start a Character Forge job from Spartaneo. If Tencent asks you to sign in, do it directly on Tencent.</p>
+<script src="popup.js"></script>
+</body>
+</html>
