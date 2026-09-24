@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#050806">
+  <title>Spartaneo Arcade Core — Dev Room</title>
+  <link rel="stylesheet" href="./arcade.css">
+  <script type="importmap">
+    {"imports":{"three":"https://unpkg.com/three@0.158.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.158.0/examples/jsm/"}}
+  </script>
+</head>
+<body>
+<div id="app">
+  <div id="game-frame">
+    <div id="hud">
+      <div class="brand">SPARTANEO ARCADE</div>
+      <div class="sub">N64 CORE TEST ROOM · DEV ONLY</div>
+      <div class="pill" id="input-status">INPUT: KEYBOARD</div>
+    </div>
+
+    <div id="topbar">
+      <button id="pause-btn">PAUSE</button>
+      <button id="sound-btn">SOUND ON</button>
+      <button id="fullscreen-btn">FULLSCREEN</button>
+    </div>
+
+    <div id="prompt" hidden>INTERACT</div>
+    <div id="toast" hidden></div>
+
+    <div class="panel" id="intro-panel">
+      <div class="panel-card">
+        <h1>SPARTANEO ARCADE</h1>
+        <p>This is the new shared arcade core test room. The blocky player is deliberately labeled <b>DEV AVATAR</b>; it is not a fallback for Adam or any real character model.</p>
+        <p>Move with WASD or arrow keys. Gamepad works. On a phone, touch controls appear automatically. Walk to a cabinet and press <b>E / ENTER / A</b>.</p>
+        <p class="warn">Real GLB assets will fail loudly if missing. The engine will never silently swap them for cubes.</p>
+        <div class="actions"><button id="enter-btn">ENTER TEST ROOM</button></div>
+      </div>
+    </div>
+
+    <div class="panel" id="cabinet-panel" hidden>
+      <div class="panel-card">
+        <h2 id="cabinet-title">ARCADE CABINET</h2>
+        <p id="cabinet-copy"></p>
+        <div class="actions"><button id="cabinet-close">BACK TO ROOM</button></div>
+      </div>
+    </div>
+
+    <div class="panel" id="fatal-panel" hidden>
+      <div class="panel-card">
+        <h2>ASSET LOAD FAILED</h2>
+        <p id="fatal-copy"></p>
+        <p class="warn">No primitive replacement was created.</p>
+        <div class="actions"><button id="fatal-close">DISMISS</button></div>
+      </div>
+    </div>
+
+    <div id="touch">
+      <div class="cluster left">
+        <button id="t-up" aria-label="Forward">▲</button>
+        <button id="t-left" aria-label="Turn left">◀</button>
+        <button id="t-down" aria-label="Backward">▼</button>
+        <button id="t-right" aria-label="Turn right">▶</button>
+      </div>
+      <div class="cluster right">
+        <button class="action" id="t-action" aria-label="Interact">A</button>
+      </div>
+    </div>
+
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+  </div>
+</div>
+<script type="module" src="./core.js"></script>
+</body>
+</html>

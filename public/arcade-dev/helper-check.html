@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07100c">
+<title>Spartaneo Forge Helper Check</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#050807;color:#eefdf1;font-family:Arial,sans-serif;display:grid;place-items:center;padding:18px}.panel{width:min(620px,96vw);background:#08110d;border:1px solid #4f7a5c;padding:18px;box-shadow:0 20px 65px #000}.title{color:#70ff9b;font:900 22px 'Courier New',monospace;margin:0 0 6px}.sub{color:#a9bbaa;font-size:12px;line-height:1.5}.status{margin:16px 0;padding:14px;border:1px solid #6b6237;background:#1a160d;color:#f0d77d;font:900 13px 'Courier New',monospace}.status.ok{border-color:#59dc7c;background:#102b19;color:#78ff9f}.status.bad{border-color:#a74c57;background:#2a1015;color:#ffadb5}.grid{display:grid;gap:8px}button,a.btn{display:block;text-decoration:none;text-align:center;min-height:44px;line-height:42px;border:1px solid #4c6854;background:#111813;color:#fff;border-radius:4px;font-weight:900}.green{border-color:#62ed89!important;background:#155d2f!important}.small{font-size:10px;color:#829687;line-height:1.45;margin-top:14px}code{color:#b8cabb}
+</style>
+</head>
+<body>
+<div class="panel">
+  <h1 class="title">CHARACTER FORGE HELPER CHECK</h1>
+  <div class="sub">This page does not need D1, R2, a Spartaneo account, or a Tencent generation. It only checks whether the desktop browser helper is installed and communicating with this page.</div>
+  <div id="status" class="status">CHECKING FOR HELPER…</div>
+  <div id="detail" class="sub">Waiting up to 3 seconds for the extension.</div>
+  <div class="grid" style="margin-top:14px">
+    <button id="retry" class="green">CHECK AGAIN</button>
+    <a class="btn" href="./v9.html">OPEN BUILD .07b</a>
+  </div>
+  <div class="small">Expected helper version: <code>0.2.x</code>. If this says NOT DETECTED on desktop Chrome/Chromium, load <code>tools/tencent-forge-helper</code> as an unpacked extension and refresh this page.</div>
+</div>
+<script>
+(() => {
+  const status = document.getElementById('status');
+  const detail = document.getElementById('detail');
+  let timer = null;
+  let detected = false;
+
+  function check() {
+    detected = false;
+    status.className = 'status';
+    status.textContent = 'CHECKING FOR HELPER…';
+    detail.textContent = 'Waiting up to 3 seconds for the extension.';
+    clearTimeout(timer);
+    window.postMessage({ type: 'SPARTANEO_FORGE_HELPER_PING' }, window.location.origin);
+    timer = setTimeout(() => {
+      if (detected) return;
+      status.className = 'status bad';
+      status.textContent = 'HELPER NOT DETECTED';
+      detail.textContent = 'The page is working, but the Character Forge Helper did not announce itself. Install/reload the unpacked extension, then check again.';
+    }, 3000);
+  }
+
+  window.addEventListener('message', (event) => {
+    if (event.source !== window || event.origin !== window.location.origin) return;
+    if (event.data?.type !== 'SPARTANEO_FORGE_HELPER_READY') return;
+    detected = true;
+    clearTimeout(timer);
+    status.className = 'status ok';
+    status.textContent = 'HELPER DETECTED';
+    detail.textContent = `Extension version ${event.data.version || 'unknown'} is talking to this page. The browser-side bridge is ready for the later live Tencent test.`;
+  });
+
+  document.getElementById('retry').addEventListener('click', check);
+  check();
+})();
+</script>
+</body>
+</html>

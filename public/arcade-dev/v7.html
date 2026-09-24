@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#050607">
+<title>Spartaneo Arcade — Build 20260923.06 Social Lobby</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#030405;color:#effff3;font-family:Arial,sans-serif}button,input{font:inherit}#room{position:fixed;inset:0;width:100%;height:100%;border:0;background:#050607}.social-hud{position:fixed;z-index:80;left:8px;bottom:max(8px,env(safe-area-inset-bottom));display:flex;gap:6px;align-items:center;pointer-events:auto}.social-hud button,.pill{min-height:34px;border:1px solid #4f765b;background:#07100bea;color:#effff3;border-radius:4px;padding:0 9px;font:800 9px 'Courier New',monospace}.pill{display:flex;align-items:center;gap:6px}.dot{width:7px;height:7px;border-radius:50%;background:#56ff8b;box-shadow:0 0 8px #56ff8b}.buildtag{position:fixed;z-index:82;left:10px;top:34px;padding:3px 6px;border:1px solid #38523f;background:#050806d9;color:#9db4a2;font:700 7px 'Courier New',monospace;pointer-events:none}.modal{position:fixed;z-index:100;inset:0;background:#020403e8;display:grid;place-items:center;padding:12px}.panel{position:relative;width:min(650px,96vw);max-height:92vh;overflow:auto;border:1px solid #5cff8d;background:#07100cf7;box-shadow:0 24px 70px #000;padding:16px}.panel h1,.panel h2{margin:0 0 8px;color:#69ff97;font:900 22px 'Courier New',monospace}.panel p{margin:6px 0 12px;color:#c7d8ca;font-size:11px;line-height:1.45}.close{position:absolute;right:8px;top:8px;width:38px;height:38px;border:1px solid #526b58;background:#111813;color:white;border-radius:4px;font-size:20px}.roster{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:10px 0 14px}.char{min-height:65px;border:1px solid #3d5945;background:#0d1510;color:#fff;border-radius:5px;padding:7px;display:grid;grid-template-columns:38px 1fr;gap:7px;align-items:center;text-align:left}.char .face{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#173120;border:1px solid #55ff88;color:#8dffae;font:900 12px 'Courier New',monospace}.char strong{font:900 10px 'Courier New',monospace}.char.selected{border-color:#7cff9f;background:#14311d;box-shadow:0 0 0 1px #4dda75 inset}.primary{width:100%;min-height:46px;border:1px solid #6dff99;background:#145f30;color:#fff;border-radius:4px;font-weight:900}.subtle{font:700 8px 'Courier New',monospace;color:#8ea994}.drawer{position:fixed;z-index:95;right:0;top:0;bottom:0;width:min(390px,94vw);background:#07100cf5;border-left:1px solid #4fcf75;box-shadow:-15px 0 45px #000;display:flex;flex-direction:column;padding:14px}.drawer h2{margin:0 45px 8px 0;color:#6cff99;font:900 18px 'Courier New',monospace}.drawer .close{position:absolute}.row{display:flex;gap:7px}.row>*{min-width:0}.row input{flex:1}.field{width:100%;min-height:42px;border:1px solid #405846;background:#0b130e;color:#fff;border-radius:4px;padding:0 10px}.btn{min-height:42px;border:1px solid #51705a;background:#111a14;color:#fff;border-radius:4px;padding:0 10px;font-weight:800}.btn.green{border-color:#5eff8c;background:#155a2d}.party-code{display:grid;place-items:center;margin:10px 0;padding:12px;border:1px dashed #5cff8d;background:#0b160f;color:#8cffad;font:900 27px 'Courier New',monospace;letter-spacing:5px}.members{display:grid;gap:6px;margin:10px 0}.member{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid #34483a;background:#0c120e;padding:8px;border-radius:4px}.member strong{font:900 10px 'Courier New',monospace}.member small{color:#91a996;font-size:9px}.status{margin-top:8px;padding:8px;border:1px solid #5c5638;background:#17150d;color:#d9c876;font:700 8px 'Courier New',monospace}.chatlog{flex:1;min-height:120px;overflow:auto;border:1px solid #33483a;background:#050906;padding:8px;margin:8px 0}.msg{margin:0 0 8px}.msg b{display:block;color:#6cff99;font:900 9px 'Courier New',monospace}.msg span{display:inline-block;background:#101812;border-radius:8px;padding:6px 8px;font-size:11px}.launch-note{position:fixed;z-index:84;left:50%;bottom:9px;transform:translateX(-50%);pointer-events:none;color:#7e9784;font:700 7px 'Courier New',monospace;text-shadow:0 1px #000}[hidden]{display:none!important}@media(max-width:650px){.roster{grid-template-columns:repeat(2,minmax(0,1fr))}.social-hud{left:7px;right:7px;justify-content:center}.social-hud button,.pill{padding:0 7px;font-size:8px}.launch-note{display:none}.buildtag{top:30px}.panel{padding:13px}.panel h1{font-size:18px}}
+</style>
+</head>
+<body>
+<iframe id="room" src="./v6.html?social=1" title="Spartaneo Arcade room"></iframe>
+<div class="buildtag">BUILD 20260923.06 · SOCIAL LOBBY</div>
+<div class="social-hud" id="socialHud" hidden>
+  <button id="characterBtn">CHARACTER</button>
+  <button id="partyBtn">PARTY <span id="partyCount">1/4</span></button>
+  <button id="chatBtn">CHAT</button>
+  <span class="pill"><span class="dot"></span><span id="who">ADAM</span></span>
+</div>
+<div class="launch-note">CHARACTER + PARTY CODE ARE ATTACHED TO GAME LAUNCHES</div>
+
+<div id="characterModal" class="modal">
+  <div class="panel"><button id="characterClose" class="close" hidden>×</button>
+    <h1>CHOOSE YOUR CHARACTER</h1>
+    <p>This is your arcade identity. The choice is remembered and attached to game launches so individual games can use the same character selection as their integration is upgraded.</p>
+    <div id="roster" class="roster"></div>
+    <button id="enterArcade" class="primary">ENTER ARCADE AS ADAM</button>
+    <p class="subtle">The room still uses BUILD .05 underneath, so the mobile performance baseline is unchanged.</p>
+  </div>
+</div>
+
+<aside id="partyDrawer" class="drawer" hidden>
+  <button id="partyClose" class="close">×</button><h2>PARTY</h2>
+  <p>Create a code, share the link, or join a code somebody sends you.</p>
+  <div id="partyCode" class="party-code">SOLO</div>
+  <div class="row"><button id="createParty" class="btn green">CREATE PARTY</button><button id="shareParty" class="btn">SHARE</button></div>
+  <div class="row" style="margin-top:7px"><input id="joinCode" class="field" maxlength="6" placeholder="PARTY CODE"><button id="joinParty" class="btn">JOIN</button></div>
+  <div id="members" class="members"></div>
+  <div class="row"><button id="readyBtn" class="btn">READY: OFF</button><button id="leaveParty" class="btn">LEAVE</button></div>
+  <div class="status">PREVIEW SYNC: LOCAL/TABS · The recovered Social Arcade has real authenticated ChatRoom/GameRoom/PresenceHub services; cross-device party sync is not being faked in this branch yet.</div>
+</aside>
+
+<aside id="chatDrawer" class="drawer" hidden>
+  <button id="chatClose" class="close">×</button><h2>PARTY CHAT</h2>
+  <div id="chatStatus" class="subtle">SOLO CHAT · LOCAL PREVIEW</div>
+  <div id="chatLog" class="chatlog"></div>
+  <div class="row"><input id="chatInput" class="field" maxlength="160" placeholder="Message party"><button id="sendChat" class="btn green">SEND</button></div>
+  <div class="status">The recovered live client uses WebSocket `/ws/chat/&lt;conversationId&gt;` and authenticated conversations. This preview keeps chat local until that auth/conversation bridge is deliberately connected.</div>
+</aside>
+
+<script>
+(()=>{
+const BUILD='20260923.06';
+const roster=[
+ ['adam','ADAM'],['sully','SULLY'],['streepy','STREEPY'],['bueno','BUENO'],['kp','KP'],['bubba','BUBBA'],['jubilee','JUBILEE'],['king_sully','KING SULLY'],['waylon','WAYLON'],['brianna','BRIANNA'],['mikey','MIKEY'],['mr_meena','MR. MEENA'],['mystery_guest','MYSTERY GUEST'],['kars','KARS']
+];
+const colors=['#55ff88','#ff5f75','#42d9ff','#ffc35a','#916cff','#42e0c8','#ff83d0','#9cff5a','#62a0ff','#ff9e5a','#78f0c2','#dadb8a','#d98cff','#ff6a4f'];
+const $=id=>document.getElementById(id),room=$('room'),characterModal=$('characterModal'),characterClose=$('characterClose'),rosterEl=$('roster'),enterArcade=$('enterArcade'),socialHud=$('socialHud'),characterBtn=$('characterBtn'),partyBtn=$('partyBtn'),chatBtn=$('chatBtn'),partyDrawer=$('partyDrawer'),partyClose=$('partyClose'),chatDrawer=$('chatDrawer'),chatClose=$('chatClose'),partyCodeEl=$('partyCode'),createParty=$('createParty'),shareParty=$('shareParty'),joinCode=$('joinCode'),joinParty=$('joinParty'),membersEl=$('members'),readyBtn=$('readyBtn'),leaveParty=$('leaveParty'),partyCount=$('partyCount'),who=$('who'),chatStatus=$('chatStatus'),chatLog=$('chatLog'),chatInput=$('chatInput'),sendChat=$('sendChat');
+let selected=localStorage.getItem('ogb.character')||'adam';if(!roster.some(r=>r[0]===selected))selected='adam';
+let party=(new URL(location.href)).searchParams.get('party')||localStorage.getItem('ogb.party')||'';party=cleanCode(party);let ready=false;let channel=null;let seenMembers=new Map();let heartbeat=null;const tabId=crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2);let entered=false;
+function charName(id){return roster.find(r=>r[0]===id)?.[1]||id.toUpperCase()}function initials(name){return name.split(/\s+/).map(x=>x[0]).join('').slice(0,2)}function cleanCode(v){return String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6)}function code(){const a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<6;i++)s+=a[Math.floor(Math.random()*a.length)];return s}
+function renderRoster(){rosterEl.innerHTML=roster.map((r,i)=>`<button class="char ${r[0]===selected?'selected':''}" data-char="${r[0]}"><span class="face" style="border-color:${colors[i]};color:${colors[i]}">${initials(r[1])}</span><strong>${r[1]}</strong></button>`).join('');enterArcade.textContent=`${entered?'USE':'ENTER ARCADE AS'} ${charName(selected)}`;who.textContent=charName(selected)}
+rosterEl.addEventListener('click',e=>{const b=e.target.closest('[data-char]');if(!b)return;selected=b.dataset.char;localStorage.setItem('ogb.character',selected);renderRoster();patchGameLaunches();announcePresence()});
+function enter(){entered=true;characterModal.hidden=true;characterClose.hidden=false;socialHud.hidden=false;try{room.contentDocument?.getElementById('enter')?.click()}catch{}patchRoomLabel();patchGameLaunches();setParty(party,false)}
+enterArcade.addEventListener('click',enter);characterBtn.addEventListener('click',()=>{renderRoster();characterModal.hidden=false});characterClose.addEventListener('click',()=>characterModal.hidden=true);
+function patchRoomLabel(){try{const d=room.contentDocument;if(!d)return;const meta=d.querySelector('.meta');if(meta)meta.textContent='BUILD 20260923.06 · SOCIAL LOBBY · MOBILE LITE'}catch{}}
+function patchGameLaunches(){try{const w=room.contentWindow,arcade=w?.SpartaneoArcade;if(!arcade?.games)return;for(const g of arcade.games){if(!g._baseUrl)g._baseUrl=g.url;if(!g._baseUrl)continue;const u=new URL(g._baseUrl,location.href);u.searchParams.set('arcade','1');u.searchParams.set('character',selected);if(party)u.searchParams.set('party',party);else u.searchParams.delete('party');g.url=u.href}}catch{}}
+room.addEventListener('load',()=>{setTimeout(()=>{patchRoomLabel();patchGameLaunches();if(entered)try{room.contentDocument?.getElementById('enter')?.click()}catch{}},350)});
+function partyKey(){return 'ogb.party.chat.'+(party||'solo')}function loadMessages(){try{return JSON.parse(localStorage.getItem(partyKey())||'[]').slice(-50)}catch{return[]}}function saveMessages(a){localStorage.setItem(partyKey(),JSON.stringify(a.slice(-50)))}function renderMessages(){const a=loadMessages();chatLog.innerHTML=a.length?a.map(m=>`<div class="msg"><b>${escapeHtml(m.name)}</b><span>${escapeHtml(m.body)}</span></div>`).join(''):'<div class="subtle">NO MESSAGES YET</div>';chatLog.scrollTop=chatLog.scrollHeight}function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function openChannel(){if(channel){channel.close();channel=null}clearInterval(heartbeat);seenMembers.clear();if(!party){renderMembers();return}if('BroadcastChannel'in window){channel=new BroadcastChannel('spartaneo-party-'+party);channel.onmessage=e=>handlePacket(e.data)}announcePresence();heartbeat=setInterval(()=>{announcePresence();pruneMembers()},4000)}
+function packet(type,data={}){return{type,party,tabId,character:selected,name:charName(selected),ready,at:Date.now(),...data}}function sendPacket(p){channel?.postMessage(p)}function announcePresence(){if(!party)return;const p=packet('presence');seenMembers.set(tabId,p);sendPacket(p);renderMembers()}function handlePacket(p){if(!p||p.party!==party||p.tabId===tabId)return;if(p.type==='presence'){seenMembers.set(p.tabId,p);renderMembers()}if(p.type==='chat'){const a=loadMessages();if(!a.some(x=>x.id===p.id)){a.push(p);saveMessages(a);renderMessages()}}if(p.type==='hello'){announcePresence()}}
+function pruneMembers(){const n=Date.now();for(const [id,p]of seenMembers)if(n-p.at>12000)seenMembers.delete(id);renderMembers()}
+function renderMembers(){if(!party){membersEl.innerHTML='<div class="member"><strong>'+charName(selected)+'</strong><small>SOLO</small></div>';partyCount.textContent='1/4';return}seenMembers.set(tabId,packet('presence'));const list=[...seenMembers.values()].sort((a,b)=>a.tabId===tabId?-1:b.tabId===tabId?1:a.name.localeCompare(b.name)).slice(0,4);membersEl.innerHTML=list.map(p=>`<div class="member"><strong>${escapeHtml(p.name)}${p.tabId===tabId?' · YOU':''}</strong><small>${p.ready?'READY':'CHILLING'}</small></div>`).join('')+Array.from({length:Math.max(0,4-list.length)},()=>'<div class="member"><strong>OPEN SLOT</strong><small>INVITE</small></div>').join('');partyCount.textContent=list.length+'/4'}
+function setParty(v,push=true){party=cleanCode(v);if(party)localStorage.setItem('ogb.party',party);else localStorage.removeItem('ogb.party');partyCodeEl.textContent=party||'SOLO';chatStatus.textContent=(party?'PARTY '+party:'SOLO CHAT')+' · LOCAL PREVIEW';const u=new URL(location.href);if(party)u.searchParams.set('party',party);else u.searchParams.delete('party');history.replaceState(null,'',u);openChannel();renderMessages();renderMembers();patchGameLaunches();if(push&&party)sendPacket(packet('hello'))}
+createParty.addEventListener('click',()=>setParty(code()));joinParty.addEventListener('click',()=>{const c=cleanCode(joinCode.value);if(c.length<4)return;setParty(c);joinCode.value=''});joinCode.addEventListener('input',()=>joinCode.value=cleanCode(joinCode.value));leaveParty.addEventListener('click',()=>{ready=false;readyBtn.textContent='READY: OFF';setParty('')});readyBtn.addEventListener('click',()=>{ready=!ready;readyBtn.textContent='READY: '+(ready?'ON':'OFF');announcePresence()});
+shareParty.addEventListener('click',async()=>{if(!party)setParty(code());const u=new URL(location.href);u.searchParams.set('party',party);const data={title:'Join my Spartaneo Arcade party',text:'Party code '+party,url:u.href};try{if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(u.href);shareParty.textContent='COPIED';setTimeout(()=>shareParty.textContent='SHARE',1200)}}catch{}});
+function sendMessage(){const body=chatInput.value.trim();if(!body)return;const m=packet('chat',{id:crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random(),body});const a=loadMessages();a.push(m);saveMessages(a);renderMessages();sendPacket(m);chatInput.value=''}sendChat.addEventListener('click',sendMessage);chatInput.addEventListener('keydown',e=>{if(e.key==='Enter')sendMessage()});
+partyBtn.addEventListener('click',()=>{chatDrawer.hidden=true;partyDrawer.hidden=false;renderMembers()});partyClose.addEventListener('click',()=>partyDrawer.hidden=true);chatBtn.addEventListener('click',()=>{partyDrawer.hidden=true;chatDrawer.hidden=false;renderMessages()});chatClose.addEventListener('click',()=>chatDrawer.hidden=true);
+renderRoster();setParty(party,false);renderMessages();window.SpartaneoSocial={build:BUILD,get character(){return selected},get party(){return party}};
+})();
+</script>
+</body>
+</html>

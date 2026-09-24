@@ -1,0 +1,40 @@
+(() => {
+  const READY = "SPARTANEO_FORGE_HELPER_READY";
+  const PING = "SPARTANEO_FORGE_HELPER_PING";
+  const START = "SPARTANEO_FORGE_START";
+  const UPDATE = "SPARTANEO_FORGE_UPDATE";
+  const VERSION = "0.2.1";
+
+  function announce() {
+    window.postMessage({ type: READY, version: VERSION }, window.location.origin);
+  }
+
+  window.addEventListener("message", (event) => {
+    if (event.source !== window || event.origin !== window.location.origin) return;
+    const message = event.data;
+    if (!message) return;
+
+    if (message.type === PING) {
+      announce();
+      return;
+    }
+
+    if (message.type !== START) return;
+    chrome.runtime.sendMessage({
+      type: "forge:start",
+      payload: message.payload,
+    }).then((response) => {
+      window.postMessage({ type: UPDATE, payload: response || { ok: false, error: "NO_HELPER_RESPONSE" } }, window.location.origin);
+    }).catch((error) => {
+      window.postMessage({ type: UPDATE, payload: { ok: false, error: String(error?.message || error) } }, window.location.origin);
+    });
+  });
+
+  chrome.runtime.onMessage.addListener((message) => {
+    if (!message || message.type !== "forge:update") return;
+    window.postMessage({ type: UPDATE, payload: message.payload }, window.location.origin);
+  });
+
+  announce();
+  setTimeout(announce, 1200);
+})();

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#050608">
+  <title>Spartaneo Arcade — Build 20260923.02</title>
+  <link rel="stylesheet" href="./arcade-v3.css?v=20260923.02">
+  <script type="importmap">
+    {"imports":{"three":"https://unpkg.com/three@0.158.0/build/three.module.js"}}
+  </script>
+</head>
+<body>
+<div id="app">
+  <div id="game-frame">
+    <div id="hud">
+      <div class="hud-brand">SPARTANEO <span>ARCADE</span></div>
+      <div class="hud-tag">AFTER HOURS</div>
+    </div>
+
+    <div id="nav">
+      <button id="home-btn" type="button">HOME</button>
+      <button id="full-btn" type="button">FULL</button>
+    </div>
+
+    <div id="center-dot" aria-hidden="true"></div>
+    <div id="interact-prompt" hidden><span id="interact-key">A</span><strong id="interact-title">PLAY</strong></div>
+    <div id="toast" hidden></div>
+
+    <div id="intro" class="overlay">
+      <div class="intro-card">
+        <div class="eyebrow">SPARTANEO PRESENTS</div>
+        <h1>THE ARCADE</h1>
+        <p>Walk the floor. Step up to a cabinet. Hit <b>A</b> on phone or <b>E</b> on keyboard.</p>
+        <div class="intro-actions"><button id="enter-btn" type="button">ENTER</button></div>
+        <small>Development preview · live site untouched</small>
+      </div>
+    </div>
+
+    <div id="cabinet-sheet" class="sheet" hidden>
+      <button id="sheet-x" class="sheet-x" type="button" aria-label="Close">×</button>
+      <div class="sheet-kicker" id="sheet-kicker">ARCADE CABINET</div>
+      <h2 id="sheet-title">RING RIOT</h2>
+      <p id="sheet-copy"></p>
+      <div class="sheet-actions">
+        <button id="play-btn" class="primary" type="button">PLAY</button>
+        <button id="room-btn" type="button">BACK TO ROOM</button>
+      </div>
+    </div>
+
+    <div id="touch" aria-label="Touch controls">
+      <div id="stick" aria-label="Move and turn">
+        <div class="stick-ring"></div>
+        <div id="stick-knob"></div>
+      </div>
+      <button id="action-btn" type="button" aria-label="Interact"><span>A</span><small>USE</small></button>
+    </div>
+
+    <div id="build">BUILD 20260923.02</div>
+    <div class="crt-lines"></div>
+    <div class="vignette"></div>
+  </div>
+</div>
+<script type="module" src="./core-v3.js?v=20260923.02"></script>
+</body>
+</html>

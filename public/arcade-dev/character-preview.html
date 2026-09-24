@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#050607">
+<title>Spartaneo Character Preview</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#050607;color:#eaffef;font-family:'Courier New',monospace}canvas{display:block;width:100%;height:100%}.hud{position:fixed;z-index:3;left:8px;right:8px;top:8px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}.tag,.msg{border:1px solid #395342;background:#07100de8;padding:6px 8px;font-size:9px;font-weight:800}.tag{color:#75ff9d}.msg{position:fixed;z-index:4;left:50%;top:50%;transform:translate(-50%,-50%);max-width:85vw;text-align:center;color:#e5d37c}[hidden]{display:none!important}
+</style>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.158.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.158.0/examples/jsm/"}}</script>
+</head>
+<body>
+<div class="hud"><span class="tag">CUSTOM CHARACTER · DRAG TO SPIN</span><span class="tag" id="stats">LOADING</span></div>
+<div id="message" class="msg">LOADING GLB…</div>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const message=document.getElementById('message'),stats=document.getElementById('stats');
+const model=new URL(location.href).searchParams.get('model');
+if(!model){message.textContent='NO MODEL URL';throw new Error('NO_MODEL_URL')}
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(38,innerWidth/innerHeight,.01,1000);
+const renderer=new THREE.WebGLRenderer({antialias:false,alpha:false,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;document.body.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xffffff,0x202020,2.2));const key=new THREE.DirectionalLight(0xffffff,2);key.position.set(3,5,4);scene.add(key);
+const grid=new THREE.GridHelper(8,16);grid.position.y=0;scene.add(grid);
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.target.set(0,1,0);camera.position.set(0,1.3,3);
+let root=null;
+try{
+  const gltf=await new GLTFLoader().loadAsync(model);root=gltf.scene;scene.add(root);
+  const box=new THREE.Box3().setFromObject(root),size=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3());
+  root.position.sub(center);root.position.y+=size.y/2;
+  const radius=Math.max(size.x,size.y,size.z,.5);camera.position.set(radius*.9,radius*.65,radius*2.1);controls.target.set(0,size.y*.48,0);camera.near=Math.max(.01,radius/100);camera.far=Math.max(100,radius*20);camera.updateProjectionMatrix();controls.update();
+  let meshes=0,triangles=0;root.traverse(o=>{if(o.isMesh){meshes++;const g=o.geometry;if(g?.index)triangles+=g.index.count/3;else if(g?.attributes?.position)triangles+=g.attributes.position.count/3}});
+  stats.textContent=`${meshes} MESH · ${Math.round(triangles/1000)}K TRI`;message.hidden=true;
+}catch(error){message.textContent=`MODEL PREVIEW FAILED · ${String(error?.message||error)}`;stats.textContent='ERROR'}
+function frame(){requestAnimationFrame(frame);controls.update();renderer.render(scene,camera)}frame();
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+</script>
+</body>
+</html>
