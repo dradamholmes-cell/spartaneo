@@ -1,16 +1,25 @@
 (() => {
   const READY = "SPARTANEO_FORGE_HELPER_READY";
+  const PING = "SPARTANEO_FORGE_HELPER_PING";
   const START = "SPARTANEO_FORGE_START";
   const UPDATE = "SPARTANEO_FORGE_UPDATE";
+  const VERSION = "0.2.1";
 
   function announce() {
-    window.postMessage({ type: READY, version: "0.1.0" }, window.location.origin);
+    window.postMessage({ type: READY, version: VERSION }, window.location.origin);
   }
 
   window.addEventListener("message", (event) => {
     if (event.source !== window || event.origin !== window.location.origin) return;
     const message = event.data;
-    if (!message || message.type !== START) return;
+    if (!message) return;
+
+    if (message.type === PING) {
+      announce();
+      return;
+    }
+
+    if (message.type !== START) return;
     chrome.runtime.sendMessage({
       type: "forge:start",
       payload: message.payload,
