@@ -1,4 +1,4 @@
-import { and, eq, gt } from "drizzle-orm";
+import { and, eq, gt, lt } from "drizzle-orm";
 import { getDb } from "../../db";
 import { arcadeCharacterLaunchTokens } from "../../db/schema";
 
@@ -26,7 +26,11 @@ export async function mintCharacterLaunchTicket(userId: string, characterId: str
   const token = randomToken();
   const now = new Date();
   const expiresAt = new Date(now.getTime() + TTL_MINUTES * 60 * 1000);
-  await getDb().insert(arcadeCharacterLaunchTokens).values({
+  const db = getDb();
+  await db
+    .delete(arcadeCharacterLaunchTokens)
+    .where(and(eq(arcadeCharacterLaunchTokens.userId, userId), lt(arcadeCharacterLaunchTokens.expiresAt, now)));
+  await db.insert(arcadeCharacterLaunchTokens).values({
     id: crypto.randomUUID(),
     userId,
     characterId,
