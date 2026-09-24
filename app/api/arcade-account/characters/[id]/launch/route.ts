@@ -1,8 +1,8 @@
 import { and, eq } from "drizzle-orm";
-import { getDb } from "../../../../../../../db";
-import { arcadeCharacters, characterForgeJobs } from "../../../../../../../db/schema";
-import { getSessionUser } from "../../../../../../lib/arcade-auth";
-import { mintCharacterLaunchTicket } from "../../../../../../lib/character-launch";
+import { getDb } from "../../../../../../db";
+import { arcadeCharacters, characterForgeJobs } from "../../../../../../db/schema";
+import { getSessionUser } from "../../../../../lib/arcade-auth";
+import { mintCharacterLaunchTicket } from "../../../../../lib/character-launch";
 
 export async function POST(request: Request, context: { params: Promise<{ id: string }> }) {
   const user = await getSessionUser(request);
