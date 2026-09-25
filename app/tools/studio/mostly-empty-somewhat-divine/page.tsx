@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import manifest from "@/data/studio/mostly-empty-somewhat-divine.json";
+import { getOrSeedProject } from "@/db/studio-runtime";
 import { requireChatGPTUser } from "../../../chatgpt-auth";
 
 export const metadata = {
@@ -19,6 +20,8 @@ export default async function MostlyEmptyStudioRoom() {
     .map((value) => value.trim().toLowerCase());
   if (!allowed.includes(user.email.toLowerCase())) notFound();
 
+  const persisted = await getOrSeedProject(manifest);
+
   return (
     <main className="room">
       <style>{`
@@ -30,11 +33,11 @@ export default async function MostlyEmptyStudioRoom() {
 
       <div className="top">
         <Link href="/tools/studio">← OGB STUDIO</Link>
-        <span className="trusted">TRUSTED IMPORT · {manifest.package_date}</span>
+        <span className="trusted">D1 BACKED · TRUSTED IMPORT · {manifest.package_date}</span>
       </div>
 
       <h1>{manifest.title}</h1>
-      <p className="sub">First real OGB Studio comic room. This screen reflects the authoritative 2026-09-25 import package and intentionally does not infer missing final pagination.</p>
+      <p className="sub">First real OGB Studio comic room. This screen reflects the authoritative 2026-09-25 import package, persists its project snapshot in D1, and intentionally does not infer missing final pagination.</p>
 
       <div className="warning">201-PAGE WORKING COMPILATION = RECOVERY PARTS BIN. DO NOT EXPORT IT AS THE FINAL BOOK.</div>
 
@@ -49,10 +52,11 @@ export default async function MostlyEmptyStudioRoom() {
         <div className="panel">
           <h3>CURRENT STATE</h3>
           <ul>
-            <li>Status: {manifest.current_status.replaceAll("_", " ")}</li>
+            <li>Status: {persisted.state.replaceAll("_", " ")}</li>
+            <li>Project state storage: Cloudflare D1</li>
             <li>Final page count: not frozen</li>
             <li>Final cover/spine: blocked until page count is frozen</li>
-            <li>Binary asset storage: {manifest.source_package.asset_storage.replaceAll("_", " ")}</li>
+            <li>Binary asset storage: deferred; existing references stay external/legacy for now</li>
             <li>Cross-project retrieval: disabled</li>
           </ul>
         </div>
@@ -99,11 +103,11 @@ export default async function MostlyEmptyStudioRoom() {
 
       <h2>IMPORT FINGERPRINT</h2>
       <section className="panel">
-        <div>{manifest.source_package.filename}</div>
-        <div className="hash">SHA-256: {manifest.source_package.sha256}</div>
+        <div>{persisted.source_snapshot_label}</div>
+        <div className="hash">SHA-256: {persisted.source_snapshot_sha256}</div>
       </section>
 
-      <p className="footer-note">The actual binary art/PDF files remain outside this public GitHub repository until private asset storage is connected. This room stores only the trusted production metadata and rules needed to prevent drift and cross-project contamination.</p>
+      <p className="footer-note">The actual binary art/PDF files remain outside this public GitHub repository. Studio persists the trusted project snapshot in D1 now; private binary storage can be added later without turning R2 billing on today.</p>
     </main>
   );
 }
