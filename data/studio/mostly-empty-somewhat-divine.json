@@ -1,0 +1,172 @@
+{
+  "book_id": "mostly-empty-somewhat-divine",
+  "title": "Mostly Empty, Somewhat Divine",
+  "package_date": "2026-09-25",
+  "package_role": "current_truth_import",
+  "source_package": {
+    "filename": "MOSTLY_EMPTY_STUDIO_MASTER_CORE_2026-09-25.zip",
+    "sha256": "77686673d5a6c89d5697c2d2fbd78b01ab967ada6ccd64d28ae2d7b77f4d8fbb",
+    "verified_files": 54,
+    "integrity_verified": true,
+    "asset_storage": "pending_private_storage"
+  },
+  "current_status": "recoverable_but_not_final_assembly",
+  "authority_order": [
+    "00_START_HERE/00_STUDIO_CURRENT_TRUTH_2026-09-25.md",
+    "00_START_HERE/01_CURRENT_STATUS_LEDGER_2026-09-25.md",
+    "02_CHARACTER_LOCKS",
+    "03_APPROVED_KEEPERS",
+    "04_WORKING_BOOKS/MOSTLY_EMPTY_WORKING_COMPILATION_201P_NOT_FINAL_ORDER.pdf",
+    "05_SCRIPT_PAGE_MAPS"
+  ],
+  "isolation": {
+    "key": "comic:mostly-empty-somewhat-divine",
+    "cross_project_retrieval_allowed": false,
+    "unrelated_ogb_continuity_allowed": false,
+    "rejected_generations_may_be_reference": false
+  },
+  "print": {
+    "trim_inches": [6.625, 10.25],
+    "full_bleed_inches": [6.875, 10.5],
+    "working_pdf_points": [495, 756],
+    "one_page_at_a_time": true,
+    "do_not_stretch_pages": true
+  },
+  "working_compilation": {
+    "path": "04_WORKING_BOOKS/MOSTLY_EMPTY_WORKING_COMPILATION_201P_NOT_FINAL_ORDER.pdf",
+    "pdf_pages": 201,
+    "role": "visual_story_recovery_parts_bin",
+    "may_export_as_final": false,
+    "ranges": [
+      {"pdf_pages": "2-7", "role": "core cosmic/BABEL prologue"},
+      {"pdf_pages": "8-16", "role": "adult/current-day profiles"},
+      {"pdf_pages": "17-23", "role": "youth profiles; keep and repair later drift"},
+      {"pdf_pages": "24-35", "role": "Floodwall/youth sequence; keep and repair identity drift"},
+      {"pdf_pages": "36-169", "role": "older complete story spine; recovery backbone unless superseded"},
+      {"pdf_pages": "170-173", "role": "new ending direction; keeper"},
+      {"pdf_pages": "174-176", "role": "New Orleans teaser; story keep, art/lettering rebuild"},
+      {"pdf_pages": "177", "role": "Kennedy/Issue 2 callback teaser; placement not frozen"},
+      {"pdf_pages": "179-201", "role": "newer repairs/rewrite parts bin; not final reading order"}
+    ]
+  },
+  "character_locks": {
+    "count": 19,
+    "adult_reference": "02_CHARACTER_LOCKS/ADULT/ADULT_CHARACTER_REFERENCE_LOCK.jpg",
+    "youth_combined_reference": "02_CHARACTER_LOCKS/YOUTH_IDENTITY_LOCK_CURRENT.png",
+    "youth_primary_authority": "02_CHARACTER_LOCKS/YOUTH_SOURCE_PAGES",
+    "paths": [
+      "02_CHARACTER_LOCKS/ADULT/ADULT_CHARACTER_REFERENCE_LOCK.jpg",
+      "02_CHARACTER_LOCKS/ADULT/BOB_LAZAR_EXACT_IDENTITY_CROP.png",
+      "02_CHARACTER_LOCKS/ADULT/DAVID_MEENA_EXACT_IDENTITY_LOCK.png",
+      "02_CHARACTER_LOCKS/ADULT/BUENO_EXACT_IDENTITY_CROP.png",
+      "02_CHARACTER_LOCKS/ADULT/JFK_EXACT_IDENTITY_CROP.png",
+      "02_CHARACTER_LOCKS/ADULT/AARON_EXACT_IDENTITY_CROP.png",
+      "02_CHARACTER_LOCKS/ADULT/SALMA_BRUNETTE_CROP.png",
+      "02_CHARACTER_LOCKS/ADULT/JOSH_EXACT_IDENTITY_CROP.png",
+      "02_CHARACTER_LOCKS/ADULT/ADAM_EXACT_IDENTITY_CROP.png",
+      "02_CHARACTER_LOCKS/ADULT/SALMA_RED_CROP.png",
+      "02_CHARACTER_LOCKS/ADULT/hillori_character_lock_reference_sheet.png",
+      "02_CHARACTER_LOCKS/YOUTH_IDENTITY_LOCK_CURRENT.png",
+      "02_CHARACTER_LOCKS/YOUTH_SOURCE_PAGES/YOUNG_BUENO_PROFILE.png",
+      "02_CHARACTER_LOCKS/YOUTH_SOURCE_PAGES/YOUNG_AARON_PROFILE.png",
+      "02_CHARACTER_LOCKS/YOUTH_SOURCE_PAGES/YOUNG_ADAM_LOCK.png",
+      "02_CHARACTER_LOCKS/YOUTH_SOURCE_PAGES/YOUNG_STREEPY_PROFILE.png",
+      "02_CHARACTER_LOCKS/YOUTH_SOURCE_PAGES/YOUNG_JOSH_J_BONES_PROFILE.png",
+      "02_CHARACTER_LOCKS/YOUTH_SOURCE_PAGES/YOUNG_SAM_PROFILE.png",
+      "02_CHARACTER_LOCKS/YOUTH_SOURCE_PAGES/YOUNG_MANDY_HILLORI_PROFILE.png"
+    ],
+    "rules": [
+      "Keep the existing youth profile section; do not apply older delete-the-school-pages notes.",
+      "Use exact individual youth profile spreads as identity authority for later group-scene repairs.",
+      "Prioritize Mandy, Hillori, and Bueno youth drift repairs.",
+      "Bob must have normal human skin tone in color scenes and match the illustrated style.",
+      "David Meena must use the dedicated identity lock, never a generic scholar replacement."
+    ]
+  },
+  "approved_keepers": {
+    "count": 16,
+    "paths": [
+      "03_APPROVED_KEEPERS/BASE_KEEPERS/KEEPER_DALLAS_JFK_SURVIVES.png",
+      "03_APPROVED_KEEPERS/BASE_KEEPERS/KEEPER_PAGE22_DONT_COME_STRAIGHT_TO_ME.png",
+      "03_APPROVED_KEEPERS/BASE_KEEPERS/KEEPER_INTERFACE_EXPLAINER.png",
+      "03_APPROVED_KEEPERS/BASE_KEEPERS/KEEPER_TIMELINE_SPLINTERS.png",
+      "03_APPROVED_KEEPERS/BASE_KEEPERS/KEEPER_LOUISVILLE_1995_BRIDGE.png",
+      "03_APPROVED_KEEPERS/NEW_KEEPERS_2026-09-24/KEEPER_ACCESS_PROBLEM.png",
+      "03_APPROVED_KEEPERS/NEW_KEEPERS_2026-09-24/KEEPER_PAGE30_STANDIFORD_PLAN.png",
+      "03_APPROVED_KEEPERS/NEW_KEEPERS_2026-09-24/KEEPER_SAFE_HOUSE_115_INTERFACE.png",
+      "03_APPROVED_KEEPERS/NEW_KEEPERS_2026-09-24/KEEPER_WRONG_GROUP_BUENO_SUPLEX.png",
+      "03_APPROVED_KEEPERS/NEW_KEEPERS_2026-09-24/KEEPER_FIVE_MINUTES_FUGITIVE.png",
+      "03_APPROVED_KEEPERS/NEW_KEEPERS_2026-09-24/KEEPER_LOW_NET_ARCHIVE.png",
+      "03_APPROVED_KEEPERS/NEW_KEEPERS_2026-09-24/KEEPER_PAGE32_GROUND_ESCAPE.png",
+      "03_APPROVED_KEEPERS/NEW_KEEPERS_2026-09-24/KEEPER_SANDWICH_NIGHT.png",
+      "03_APPROVED_KEEPERS/NEW_KEEPERS_2026-09-24/KEEPER_PAGE31_HANGAR_HEIST.png",
+      "03_APPROVED_KEEPERS/NEW_KEEPERS_2026-09-24/KEEPER_CORRECTION_DOCTRINE.png",
+      "03_APPROVED_KEEPERS/LATER_KEEPERS/KEEPER_PAGE38_THE_CALLBACK.png"
+    ]
+  },
+  "provisional_reference": {
+    "count": 4,
+    "may_auto_promote": false,
+    "paths": [
+      "07_PROVISIONAL_REFERENCE/PROVISIONAL_FIND_BOB.png",
+      "07_PROVISIONAL_REFERENCE/PROVISIONAL_FIVE_MINUTES.png",
+      "07_PROVISIONAL_REFERENCE/KENNEDY_ISSUE2_TEASER_CANDIDATE.png",
+      "07_PROVISIONAL_REFERENCE/KENNEDY_ISSUE2_TEASER_NEWER_CANDIDATE.png"
+    ]
+  },
+  "story_locks": [
+    "Humanity genuinely wins this book.",
+    "Bob Lazar and JFK remain dead by the end of the main story.",
+    "Aaron survives.",
+    "Adam takes Plan B / the third-reference sacrifice after disabling Aaron's intended ship/option.",
+    "Adam persists somewhere else in another gravitational/cloud state.",
+    "New Orleans is a separate Mandy + Hillori mystery/spin-off hook, not a BABEL trip for the whole crew.",
+    "Near the end, tease Dallas 1963 without fully explaining how Kennedy was saved."
+  ],
+  "ending_lock": {
+    "humanity_wins": true,
+    "aaron_survives": true,
+    "adam_takes_plan_b_sacrifice": true,
+    "final_lines": [
+      "I don't know where I am.",
+      "I don't know when I am.",
+      "But I'm still here."
+    ]
+  },
+  "open_repairs": [
+    "Youth group-scene drift - Mandy/Hillori/Bueno priority.",
+    "Wrong David Meena in Access Problem/Low-Net/Sandwich Night.",
+    "Relay War likeness pass while preserving action/layout.",
+    "Mount Shasta continuity rewrite without geography-breaking teleport logic.",
+    "New Orleans likeness/lettering/safe-area rebuild.",
+    "Later Bob color/style sweep.",
+    "Global trim-safe, text, and face QA.",
+    "Freeze sequence integration and pagination.",
+    "Build final wrap cover only after page count is locked."
+  ],
+  "editorial_open_items": [
+    "Freeze exact placement of the new JFK/history-change opening pages near the front.",
+    "Freeze exact reconnection point from the Bob/115/Standiford condensed rewrite block back into the strongest old story spine.",
+    "Freeze centerfold placement only after final pagination is locked.",
+    "Freeze final cover/back/spine only after interior page count is locked."
+  ],
+  "qa_rules": [
+    "Exact face check on every named character.",
+    "Youth identity audit against individual profile sources.",
+    "Bob skin/style check.",
+    "David Meena identity check.",
+    "Hillori/Mandy separation.",
+    "Streepy/Bueno separation.",
+    "No unwanted Aaron on Adam/Josh-only pages.",
+    "No clipped dialogue or captions.",
+    "No faces under ugly text boxes.",
+    "No stretched art.",
+    "Consistent page proportions and safe margins.",
+    "No random environmental AI text."
+  ],
+  "next_work": [
+    "Persist the 19 character locks, 16 approved keepers, and recovery PDF in private asset storage using this manifest as the index.",
+    "Freeze the front-section placement of Dallas/JFK survives, Timeline Splinters, and Louisville 1995 bridge.",
+    "Freeze the editorial reconnection point after the newer Bob/115/Standiford block before generating more pages."
+  ]
+}
