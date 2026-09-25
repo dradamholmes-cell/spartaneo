@@ -16,7 +16,8 @@ export default async function OgbStudioPage() {
   if (!allowed.includes(user.email.toLowerCase())) notFound();
 
   const connected = STUDIO_PROJECTS.filter((project) => project.migrationState === "connected").length;
-  const needsImport = STUDIO_PROJECTS.length - connected;
+  const imported = STUDIO_PROJECTS.filter((project) => project.migrationState === "metadata-imported").length;
+  const needsImport = STUDIO_PROJECTS.filter((project) => project.migrationState === "needs-import").length;
 
   return (
     <main className="studio-shell">
@@ -25,7 +26,7 @@ export default async function OgbStudioPage() {
         .studio-top{display:flex;justify-content:space-between;gap:20px;align-items:center}.studio-top a{color:#a9a093;font-size:12px;font-weight:900;letter-spacing:.1em}.pill{border:1px solid #2d6f47;background:#102219;color:#8de8ab;padding:8px 12px;font-size:11px;font-weight:900;letter-spacing:.08em}
         h1{margin:28px 0 8px;font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;font-size:clamp(56px,9vw,112px);line-height:.86;letter-spacing:.01em}.dek{max-width:880px;color:#aaa194;font-size:17px;line-height:1.6}
         .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:28px 0}.stat{padding:18px;border:1px solid #2a2a27;background:#111210}.stat b{display:block;font-size:28px}.stat span{color:#9b9387;font-size:11px;font-weight:900;letter-spacing:.12em}
-        h2{margin:38px 0 14px;font-size:16px;letter-spacing:.12em}.project-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.project{padding:22px;border:1px solid #2c2d29;background:#131411}.project.connected{border-color:#2f7d4c}.project small{color:#f1963a;font-weight:900;letter-spacing:.12em}.project h3{margin:10px 0 8px;font-size:26px}.project p{margin:0;color:#aaa194;line-height:1.5}.status{display:inline-block;margin-top:18px;padding:7px 9px;border:1px solid #3a3b36;color:#bbb2a5;font-size:11px;font-weight:900}.status.ok{border-color:#2f7d4c;color:#8de8ab}
+        h2{margin:38px 0 14px;font-size:16px;letter-spacing:.12em}.project-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.project{padding:22px;border:1px solid #2c2d29;background:#131411}.project.connected{border-color:#2f7d4c}.project.imported{border-color:#a8772b}.project small{color:#f1963a;font-weight:900;letter-spacing:.12em}.project h3{margin:10px 0 8px;font-size:26px}.project p{margin:0;color:#aaa194;line-height:1.5}.status{display:inline-block;margin-top:18px;padding:7px 9px;border:1px solid #3a3b36;color:#bbb2a5;font-size:11px;font-weight:900}.status.ok{border-color:#2f7d4c;color:#8de8ab}.status.imported{border-color:#a8772b;color:#f0b45c}.room-link{display:block;margin-top:18px;color:#8de8ab;font-size:12px;font-weight:900;letter-spacing:.08em}
         .workflow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.step{padding:18px;border:1px solid #2a2a27;background:#0f100e}.step b{display:block;color:#f1963a;margin-bottom:8px}.step span{color:#aaa194;font-size:13px;line-height:1.45}
         .rules{margin-top:24px;padding:22px;border:1px solid #2a2a27;background:#10110f}.rules ul{margin:10px 0 0;padding-left:20px;color:#bbb2a5;line-height:1.8}.next{margin-top:28px;padding:24px;border:2px solid #f1963a;background:#16120d;box-shadow:7px 7px 0 #000}.next strong{display:block;font-size:22px}.next p{margin-bottom:0;color:#c4b9a9}
         @media(max-width:860px){.stats{grid-template-columns:repeat(2,1fr)}.project-grid{grid-template-columns:1fr}.workflow{grid-template-columns:1fr}.studio-top{align-items:flex-start;flex-direction:column}}
@@ -44,23 +45,27 @@ export default async function OgbStudioPage() {
 
       <section className="stats">
         <div className="stat"><b>{STUDIO_PROJECTS.length}</b><span>PROJECT ROOMS</span></div>
-        <div className="stat"><b>{connected}</b><span>CONNECTED</span></div>
+        <div className="stat"><b>{connected}</b><span>FULLY CONNECTED</span></div>
+        <div className="stat"><b>{imported}</b><span>METADATA IMPORTED</span></div>
         <div className="stat"><b>{needsImport}</b><span>NEED IMPORT</span></div>
-        <div className="stat"><b>0</b><span>PRODUCTION WRITES UNLOCKED</span></div>
       </section>
 
       <h2>PROJECT ROOMS</h2>
       <section className="project-grid">
-        {STUDIO_PROJECTS.map((project) => (
-          <article className={`project ${project.migrationState === "connected" ? "connected" : ""}`} key={project.id}>
-            <small>{project.kind.toUpperCase()}</small>
-            <h3>{project.name}</h3>
-            <p>{project.note}</p>
-            <span className={`status ${project.migrationState === "connected" ? "ok" : ""}`}>
-              {project.migrationState === "connected" ? "CONNECTED" : "IMPORT NEEDED"}
-            </span>
-          </article>
-        ))}
+        {STUDIO_PROJECTS.map((project) => {
+          const stateClass = project.migrationState === "connected" ? "connected" : project.migrationState === "metadata-imported" ? "imported" : "";
+          const statusClass = project.migrationState === "connected" ? "ok" : project.migrationState === "metadata-imported" ? "imported" : "";
+          const statusText = project.migrationState === "connected" ? "CONNECTED" : project.migrationState === "metadata-imported" ? "METADATA IMPORTED" : "IMPORT NEEDED";
+          return (
+            <article className={`project ${stateClass}`} key={project.id}>
+              <small>{project.kind.toUpperCase()}</small>
+              <h3>{project.name}</h3>
+              <p>{project.note}</p>
+              <span className={`status ${statusClass}`}>{statusText}</span>
+              {project.id === "mostly-empty-somewhat-divine" ? <Link className="room-link" href="/tools/studio/mostly-empty-somewhat-divine">OPEN ROOM →</Link> : null}
+            </article>
+          );
+        })}
       </section>
 
       <h2>COMIC PAGE WORKFLOW</h2>
@@ -86,7 +91,7 @@ export default async function OgbStudioPage() {
       <section className="next">
         <strong>NEXT BUILD TARGET</strong>
         <p>
-          Connect the first real comic room to persistent project/page/reference records, then expose safe read/write actions for normal ChatGPT conversations.
+          Persist Mostly Empty&apos;s trusted binary assets privately, then expose keeper/reference/page-state write actions for normal ChatGPT conversations.
         </p>
       </section>
     </main>
