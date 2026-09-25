@@ -234,7 +234,7 @@ function rpcError(id: RpcRequest["id"], code: number, message: string, data?: un
 }
 
 function responseJson(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
+  return new Response(status === 204 ? null : JSON.stringify(body), {
     status,
     headers: {
       "content-type": "application/json; charset=utf-8",
