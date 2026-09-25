@@ -9,6 +9,7 @@ export const studioProjects = sqliteTable("studio_projects", {
   state: text("state").notNull().default("active"),
   sourceSnapshotSha256: text("source_snapshot_sha256"),
   sourceSnapshotLabel: text("source_snapshot_label"),
+  metadataJson: text("metadata_json").notNull().default("{}"),
   createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
   updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
 });
