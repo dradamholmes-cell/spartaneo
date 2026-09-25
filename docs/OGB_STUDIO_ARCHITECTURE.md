@@ -13,6 +13,25 @@ OGB Studio is the owner-only control room for Spartaneo projects. Core operation
 5. **Charges/orders are separately locked.** No purchase, Printify order, paid API action, or other charge may execute without explicit owner approval.
 6. **The project registry is the source of truth.** Hand-off files are exports from Studio state, not the canonical database.
 7. **Every mutation is auditable and reversible.** Site/code changes should be tied to Git commits or versioned records with rollback paths.
+8. **Private art stays private by default.** Binary source packages, character sheets, keeper art, working PDFs, and rejected generations must not be added to a public Git repository merely to make Studio work.
+
+## First trusted import
+
+`Mostly Empty, Somewhat Divine` is the first real Studio room.
+
+Trusted import snapshot:
+
+- Package: `MOSTLY_EMPTY_STUDIO_MASTER_CORE_2026-09-25.zip`
+- Package date: 2026-09-25
+- Package SHA-256: `77686673d5a6c89d5697c2d2fbd78b01ab967ada6ccd64d28ae2d7b77f4d8fbb`
+- Internal checksum entries verified: 54 / 54
+- Character locks indexed: 19
+- Approved keepers indexed: 16
+- Provisional-only references indexed: 4
+- 201-page working compilation: explicitly recovery/reference only, never a final export
+- Binary asset persistence: still pending private storage
+
+The source package's newest START_HERE and status ledger supersede older conflicting notes. In particular, the youth profile section stays; later identity drift is repaired from the exact individual youth reference pages rather than deleting the youth section.
 
 ## Comic data model target
 
@@ -84,11 +103,14 @@ Each comic project will eventually contain:
 - Project registry
 - Authenticated Studio status endpoint
 - Hard-coded safety rules
+- First trusted comic metadata import
+- First authenticated project read endpoint
 
-### Phase 2 — First real comic room
+### Phase 2 — Private assets + page state
 
-- Persistent project/page/reference storage
-- Import one active comic into the registry
+- Private binary asset storage
+- Persist character locks, keeper art, recovery PDFs, and future drafts/rejects
+- Persistent project/page/reference records
 - Page state machine
 - Locked reference enforcement
 - Rejected-generation quarantine
