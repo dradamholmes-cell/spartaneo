@@ -1,5 +1,5 @@
 export type StudioProjectKind = "comic" | "website" | "game" | "music" | "merch";
-export type StudioMigrationState = "needs-import" | "connected";
+export type StudioMigrationState = "needs-import" | "metadata-imported" | "connected";
 
 export type StudioProject = {
   id: string;
@@ -12,8 +12,8 @@ export type StudioProject = {
 
 /**
  * OGB Studio's project rooms are intentionally isolated.
- * A future project-scoped tool must receive exactly one isolationKey and must
- * not search, retrieve, or mutate data belonging to any other project room.
+ * A project-scoped tool must receive exactly one isolationKey and must not
+ * search, retrieve, or mutate data belonging to any other project room.
  */
 export const STUDIO_PROJECTS: StudioProject[] = [
   {
@@ -21,8 +21,8 @@ export const STUDIO_PROJECTS: StudioProject[] = [
     name: "Mostly Empty, Somewhat Divine",
     kind: "comic",
     isolationKey: "comic:mostly-empty-somewhat-divine",
-    migrationState: "needs-import",
-    note: "Import approved canon, character locks, keeper pages, and current production state.",
+    migrationState: "metadata-imported",
+    note: "Trusted 2026-09-25 Studio package indexed. Private binary asset storage is the remaining import step.",
   },
   {
     id: "bubba-license-to-purr",
