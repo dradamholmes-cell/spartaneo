@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ogb-studio-web",
+  "main": "worker/studio-web.ts",
+  "compatibility_date": "2026-05-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "vars": {
+    "STUDIO_WEB_TOKEN": "REPLACE_LOCAL_WEB_TOKEN"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ogb-studio",
+      "database_id": "e67475a8-e0a2-4912-ba46-5a85404287a8"
+    }
+  ]
+}
