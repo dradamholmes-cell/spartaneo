@@ -17,7 +17,6 @@ const mime = (p) => p.toLowerCase().endsWith(".jpg") || p.toLowerCase().endsWith
 const fingerprint = `package-verified:${packageSha};individual-hash=pending`;
 const lines = [
   "-- Generated from the authoritative 2026-09-25 Mostly Empty Studio manifest.",
-  "BEGIN TRANSACTION;",
   `UPDATE studio_projects SET state='repair_queue_active_not_final_assembly',updated_at=CURRENT_TIMESTAMP WHERE id=${q(projectId)};`,
 ];
 
@@ -59,7 +58,6 @@ lines.push(`DELETE FROM studio_events WHERE project_id=${q(projectId)} AND actio
 lines.push(`INSERT INTO studio_events(project_id,action,entity_type,entity_id,data_json,created_at) VALUES(${q(projectId)},'editorial_locks_frozen_2026_09_25','project',${q(projectId)},${q(JSON.stringify({opening_order:["KEEPER_DALLAS_JFK_SURVIVES.png","KEEPER_TIMELINE_SPLINTERS.png","KEEPER_LOUISVILLE_1995_BRIDGE.png"],opening_placement:"after initial cosmic foundation, before 1995/BABEL settles",reconnect_at:"KEEPER_PAGE38_THE_CALLBACK.png",final_page_numbers_frozen:false}))},CURRENT_TIMESTAMP);`);
 lines.push(`INSERT INTO studio_events(project_id,action,entity_type,entity_id,data_json,created_at) VALUES(${q(projectId)},'trusted_refs_indexed_2026_09_25','project',${q(projectId)},${q(JSON.stringify({character_locks:19,approved_keepers:16,working_recovery_pdf_indexed:true,private_binary_storage:"pending",source:"trusted_library_zip"}))},CURRENT_TIMESTAMP);`);
 lines.push(`INSERT INTO studio_events(project_id,action,entity_type,entity_id,data_json,created_at) VALUES(${q(projectId)},'repair_page_queued_2026_09_25','page','me-repair-access-problem-david',${q(JSON.stringify({reason:"Current package explicitly flags wrong David Meena in Access Problem; both exact keeper base and exact David identity lock are approved trusted assets.",page_number_intentionally_null:true}))},CURRENT_TIMESTAMP);`);
-lines.push("COMMIT;");
 
 const tempSql = path.join(ROOT, "db", ".mostly-empty-studio-seed.sql");
 fs.writeFileSync(tempSql, lines.join("\n") + "\n", "utf8");
