@@ -8,9 +8,9 @@
     "sha256": "77686673d5a6c89d5697c2d2fbd78b01ab967ada6ccd64d28ae2d7b77f4d8fbb",
     "verified_files": 54,
     "integrity_verified": true,
-    "asset_storage": "pending_private_storage"
+    "asset_storage": "indexed_from_trusted_library_zip;private_binary_storage_pending"
   },
-  "current_status": "recoverable_but_not_final_assembly",
+  "current_status": "repair_queue_active_not_final_assembly",
   "authority_order": [
     "00_START_HERE/00_STUDIO_CURRENT_TRUTH_2026-09-25.md",
     "00_START_HERE/01_CURRENT_STATUS_LEDGER_2026-09-25.md",
@@ -133,6 +133,25 @@
       "But I'm still here."
     ]
   },
+  "editorial_locks": {
+    "opening_sequence": {
+      "locked": true,
+      "order": [
+        "03_APPROVED_KEEPERS/BASE_KEEPERS/KEEPER_DALLAS_JFK_SURVIVES.png",
+        "03_APPROVED_KEEPERS/BASE_KEEPERS/KEEPER_TIMELINE_SPLINTERS.png",
+        "03_APPROVED_KEEPERS/BASE_KEEPERS/KEEPER_LOUISVILLE_1995_BRIDGE.png"
+      ],
+      "placement": "Immediately after the initial cosmic foundation and before the story settles into the 1995/BABEL material.",
+      "final_page_numbers_frozen": false,
+      "rule": "Use the approved keeper art. Do not regenerate these pages merely to change numbering."
+    },
+    "reconnection": {
+      "locked": true,
+      "after_block": "newer Bob/115/Standiford condensed rewrite block",
+      "reconnect_at": "03_APPROVED_KEEPERS/LATER_KEEPERS/KEEPER_PAGE38_THE_CALLBACK.png",
+      "rule": "Rejoin the strongest older story spine at the approved Page 38 callback keeper. Preserve the current trusted rewrite block before it; do not import unrelated old V9 material."
+    }
+  },
   "open_repairs": [
     "Youth group-scene drift - Mandy/Hillori/Bueno priority.",
     "Wrong David Meena in Access Problem/Low-Net/Sandwich Night.",
@@ -145,8 +164,6 @@
     "Build final wrap cover only after page count is locked."
   ],
   "editorial_open_items": [
-    "Freeze exact placement of the new JFK/history-change opening pages near the front.",
-    "Freeze exact reconnection point from the Bob/115/Standiford condensed rewrite block back into the strongest old story spine.",
     "Freeze centerfold placement only after final pagination is locked.",
     "Freeze final cover/back/spine only after interior page count is locked."
   ],
@@ -165,8 +182,8 @@
     "No random environmental AI text."
   ],
   "next_work": [
-    "Persist the 19 character locks, 16 approved keepers, and recovery PDF in private asset storage using this manifest as the index.",
-    "Freeze the front-section placement of Dallas/JFK survives, Timeline Splinters, and Louisville 1995 bridge.",
-    "Freeze the editorial reconnection point after the newer Bob/115/Standiford block before generating more pages."
+    "Process the D1 repair queue beginning with the targeted Access Problem David Meena identity repair.",
+    "Then queue the Low-Net Archive and Sandwich Night David Meena identity repairs using the same dedicated David lock.",
+    "Continue current-package repair items one page at a time; do not freeze final pagination until the repair queue is complete."
   ]
 }
