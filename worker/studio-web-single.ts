@@ -184,9 +184,10 @@ async function bundledProject(env: Env) {
     story_locks: persisted.story_locks,
     ending_lock: persisted.ending_lock,
     qa_rules: persisted.qa_rules,
-    open_repairs: persisted.open_repairs,
-    editorial_open_items: persisted.editorial_open_items,
-    next_work: persisted.next_work,
+    open_repairs: manifest.open_repairs,
+    editorial_locks: manifest.editorial_locks,
+    editorial_open_items: manifest.editorial_open_items,
+    next_work: manifest.next_work,
     rules: persisted.isolation,
     workflow: {
       next: nextPage,
