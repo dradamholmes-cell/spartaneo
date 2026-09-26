@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { execFileSync } from "node:child_process";
+import { execSync } from "node:child_process";
 
 const ROOT = process.cwd();
 const manifestPath = path.join(ROOT, "data", "studio", "mostly-empty-somewhat-divine.json");
@@ -64,8 +64,13 @@ lines.push("COMMIT;");
 const tempSql = path.join(ROOT, "db", ".mostly-empty-studio-seed.sql");
 fs.writeFileSync(tempSql, lines.join("\n") + "\n", "utf8");
 try {
-  const npx = process.platform === "win32" ? "npx.cmd" : "npx";
-  execFileSync(npx, ["wrangler", "d1", "execute", "ogb-studio", "--remote", "--file", tempSql], { stdio: "inherit", cwd: ROOT });
+  const quotedSql = tempSql.replaceAll('"', '\\"');
+  const command = `npx wrangler d1 execute ogb-studio --remote --file "${quotedSql}"`;
+  execSync(command, {
+    stdio: "inherit",
+    cwd: ROOT,
+    shell: process.platform === "win32" ? (process.env.ComSpec || "cmd.exe") : "/bin/sh",
+  });
   console.log("OGB Studio seeded: 19 character locks, 16 keepers, recovery PDF index, editorial locks, and first repair task.");
 } finally {
   if (fs.existsSync(tempSql)) fs.unlinkSync(tempSql);
