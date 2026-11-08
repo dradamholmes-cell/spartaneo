@@ -62,6 +62,15 @@ test("server-renders both comic reader routes", async () => {
   assert.match(twoHtml, /page-001\.webp/i);
 });
 
+test("server-renders the music studio route", async () => {
+  const response = await render("/studio");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /Spartaneo Music Studio/i);
+  assert.match(html, /studio\/index\.html/i);
+  await access(new URL("../public/studio/studio.js", import.meta.url));
+});
+
 test("ships complete contiguous comic page assets without Issue 2 trailing blanks", async () => {
   const issueOneRoot = new URL("../public/comics/issue-1/", import.meta.url);
   const issueTwoRoot = new URL("../public/comics/issue-2/", import.meta.url);
