@@ -4,9 +4,6 @@
   "main": "worker/music-studio.ts",
   "compatibility_date": "2026-11-07",
   "workers_dev": true,
-  "routes": [
-    { "pattern": "spartaneo.com/studio*", "zone_name": "spartaneo.com" }
-  ],
   "assets": {
     "directory": "./public/studio",
     "binding": "ASSETS",
